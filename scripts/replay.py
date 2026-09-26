@@ -24,6 +24,11 @@ LEVELS = {'archived': 0, 'fresh': 1, 'full': 2}
 if MODE not in LEVELS: sys.exit(__doc__)
 PY = sys.executable
 steps = []
+REDACT = [(PY, 'python'), (ROOT, '.')]   # receipts record portable commands, never local paths
+
+def portable(text):
+    for real, shown in REDACT: text = text.replace(real, shown)
+    return text
 
 def sha(path):
     return hashlib.sha256(open(os.path.join(ROOT, path), 'rb').read()).hexdigest() if os.path.exists(os.path.join(ROOT, path)) else None
@@ -34,9 +39,9 @@ def step(name, level, cmd, cwd='.', inputs=(), outputs=(), rng='', expect=None, 
     r = subprocess.run(cmd, cwd=os.path.join(ROOT, cwd), capture_output=True, text=True, shell=shell)
     tail = (r.stdout.strip().splitlines() or [''])[-1]
     ok = r.returncode == 0 and (expect is None or expect in r.stdout)
-    steps.append({"name": name, "level": level, "command": cmd if isinstance(cmd, str) else ' '.join(cmd), "cwd": cwd,
+    steps.append({"name": name, "level": level, "command": portable(cmd if isinstance(cmd, str) else ' '.join(cmd)), "cwd": cwd,
                   "range": rng, "inputs": {p: sha(p) for p in inputs}, "outputs": {p: sha(p) for p in outputs},
-                  "exit": r.returncode, "result": tail, "seconds": round(time.time() - t0, 1), "passed": ok})
+                  "exit": r.returncode, "result": portable(tail), "seconds": round(time.time() - t0, 1), "passed": ok})
     print(f"[{level:8s}] {'PASS' if ok else 'FAIL'}  {name}: {tail}")
     if not ok:
         print(r.stdout[-2000:], r.stderr[-2000:]); finish(False)
@@ -44,6 +49,8 @@ def step(name, level, cmd, cwd='.', inputs=(), outputs=(), rng='', expect=None, 
 def finish(ok):
     rec = {"mode": MODE, "passed": ok, "completedAt": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
            "python": sys.version.split()[0], "steps": steps}
+    leaked = [x for x in (ROOT, os.path.expanduser('~')) if x in json.dumps(rec)]
+    if leaked: print("receipt would record local paths:", leaked); rec["passed"] = ok = False
     os.makedirs(os.path.join(ROOT, 'receipts'), exist_ok=True)
     json.dump(rec, open(os.path.join(ROOT, 'receipts', f"replay_{MODE}_{rec['completedAt'].replace(':', '')}.json"), 'w'), indent=1)
     print("REPLAY", MODE.upper(), "PASSED" if ok else "FAILED"); sys.exit(0 if ok else 1)
@@ -76,7 +83,7 @@ step('consequences (generators, hsop constraints, leading constants) recomputed 
      inputs=['data/consequences.json'], expect='True')
 step('research gates', 'archived', [PY, 'scripts/check_research_gates.py', '.'], inputs=['RESEARCH_GATES.json'], expect='"passed"')
 # ---- fresh ----
-tmp = tempfile.mkdtemp()
+tmp = tempfile.mkdtemp(); REDACT.insert(0, (tmp, '$TMP'))
 step('blind torus program rerun (temporary copy), d = 5..9, compared with our enumerator', 'fresh',
      f'cp -R independent/blind_torus_bounds {tmp}/b && cd {tmp}/b && {PY} poles.py 5 6 7 8 9 > /dev/null && cd - > /dev/null && {PY} -c "import json,sys\nok=True\nfor d in (5,6,7,8,9):\n a={{int(k):v[0] for k,v in json.load(open(f\'scripts/pole_bounds_d{{d}}.json\')).items() if v[0]>0}}\n t=json.load(open(f\'{tmp}/b/results_d{{d}}.json\')); t=t.get(\'b_r\',t)\n b={{int(k):int(v) for k,v in t.items() if int(v)>0}}\n ok&=a==b\nprint(\'FRESH BLIND AGREES:\',ok); sys.exit(0 if ok else 1)"',
      shell=True, rng='d = 5..9', expect='AGREES: True')
