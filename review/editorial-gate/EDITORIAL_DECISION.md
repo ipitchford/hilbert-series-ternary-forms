@@ -79,4 +79,12 @@ The shipped `da.json` has one local scratch path replaced by `<local path>`; its
 | APP-9 | Page wording: "exactly 45 new basic invariants are needed in degree 8" | site body | text |
 | DA-7 | No further 31-bit primes: against systematic error the second algorithm (DA-1) is the stronger check | — | — |
 
-**Residual issues carried to the confirmation round:** none known. The confirmation round reviews the repaired target against this matrix.
+**Confirmation round: waived by the publisher (26 September 2026).** It had been started on `confirmation-target-0.2.0-candidate.zip` (SHA-256 `f51f2b2e…`, commit `cec66de`). It was stopped before any report was filed, and no confirmation findings exist. The deterministic publication-ready checks were run on that exact target and all passed:
+- archived replay from a fresh extraction;
+- PDF TeX preflight (0 raw-TeX findings);
+- AI-index link check;
+- no local paths;
+- research gates;
+- cross-references.
+
+**Evidence Press state:** `PASS_WITH_NOTES`. The notes: the confirmation round was waived; all review is internal and model-based.
