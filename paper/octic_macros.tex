@@ -1,0 +1,40 @@
+\newcommand{\OCTICABSTRACT}{We also determine the octic series, with a least denominator of degree $2331$, and the nonic series ($d=9$), with a least denominator of degree $1393$. The numerators are palindromic of degrees $2286$ and $1338$.}
+\newcommand{\OCTICTHEOREM}{$H_8(t)=N_8(t)/D_8(t)$, where $D_8=\prod_r\Phi_r^{m_r}$ has degree $2331$ with the multiplicities of Table~\ref{tab:oct}, and $N_8$ is palindromic of degree $2286$. Likewise $H_9(t)=N_9(t)/D_9(t)$, where $D_9$ has degree $1393$ (Table~\ref{tab:oct}) and $N_9$ is palindromic of degree $1338$. The polynomials are in \texttt{data/octic/d8\_rational.json} and \texttt{data/nonic/d9\_rational.json}. The first coefficients are
+\[
+H_8=1+t^3+6t^6+81t^9+1990t^{12}+46543t^{15}+873667t^{18}+\cdots,
+\]
+\[
+H_9=1+t^4+6t^6+3t^7+46t^8+118t^9+612t^{10}+2012t^{11}+8300t^{12}+\cdots.
+\]}
+\newcommand{\OCTICSECTION}{Here no candidate is needed: Proposition~\ref{prop:cert} produces the series directly from the exact coefficients.
+
+\emph{Octics.} For $d=8$: $\dim V=45$, $\delta=37$, and the bound $B$ has degree $2433$ over $62$ orders. So $K=2388$, $\varepsilon=+1$, and $a_0,\dots,a_{1194}$ determine $H_8$. We computed them by the grid method at six distinct $62$-bit primes ($372$ bits). This exceeds twice $\binom{1194+44}{44}<2^{271}$, so the Chinese remainder theorem recovers the integers. The computation took $89$ minutes on an eight-core laptop. The script \texttt{certify\_ternary.py} forms $P=H\cdot B$ from these coefficients, completes it by palindromy, and reduces $P/B$ to lowest terms. It checks that the pole order at $t=1$ equals $\delta=37$ and that the series is nonnegative.
+
+\emph{Nonics.} For $d=9$: $\dim V=55$ and $\delta=47$. The bound has degree $1427$, so $a_0,\dots,a_{686}$ suffice. We computed them at six $62$-bit primes, about five minutes each.
+
+Three checks lie outside the determination itself (\texttt{check\_ternary\_extra.py}):
+\begin{itemize}
+\item the determined series predict the coefficients modulo a fresh $31$-bit prime up to degree $1600$ for $d=8$ and $1000$ for $d=9$, far beyond the data used;
+\item they agree with an independent weight-counting program, which uses no roots of unity, modulo two $16$-bit primes up to degree $450$ for $d=8$ and $400$ for $d=9$;
+\item the same pipeline, applied to $d=5$ and $d=6$, re-derives Bedratyuk and Xin's rational functions exactly.
+\end{itemize}
+
+As for $d=5,6,7$, the torus bound exceeds the true multiplicity only at a few small orders, by exactly $2$: at $r\in\{2,4,5,6,7,9,12,15,18,21\}$ for $d=8$, and at $r\in\{2,4,5,7,8\}$ for $d=9$.
+
+\begin{table}[h]\small
+\caption{Multiplicities $m_r$ of $\Phi_r$ in the least denominators of $H_8$ and $H_9$ ($r{:}m_r$; all others are $0$).}\label{tab:oct}
+\begin{tabular}{@{}p{0.08\textwidth}p{0.86\textwidth}@{}}
+\toprule
+$d=8$ & 1:37, 2:16, 3:37, 4:8, 5:9, 6:16, 7:7, 8:4, 9:14, 10:4, 11:2, 12:8, 13:2, 14:3, 15:9, 16:1, 17:2, 18:6, 19:1, 20:1, 21:7, 22:1, 23:1, 24:4, 25:1, 26:1, 27:4, 28:1, 29:1, 30:4, 31:1, 33:2, 35:1, 36:3, 37:1, 39:2, 41:1, 42:3, 45:3, 48:1, 49:1, 51:2, 54:2, 57:1, 60:1, 63:2, 66:1, 69:1, 72:1, 75:1, 78:1, 81:1, 84:1, 87:1, 90:1, 93:1, 105:1, 108:1, 111:1, 123:1, 126:1, 147:1\\[3pt]
+$d=9$ & 1:47, 2:26, 3:16, 4:14, 5:11, 6:8, 7:9, 8:8, 9:4, 10:6, 11:3, 12:4, 13:3, 14:5, 15:3, 16:4, 17:2, 18:2, 19:2, 20:3, 21:2, 22:2, 23:2, 24:2, 25:2, 26:1, 27:1, 28:2, 29:1, 30:1, 31:1, 32:2, 33:1, 34:1, 35:1, 36:1, 37:1, 38:1, 40:1, 41:1, 42:1, 43:1, 44:1, 46:1, 47:1, 48:1, 49:1, 50:1, 55:1, 56:1, 64:1\\
+\bottomrule
+\end{tabular}
+\end{table}}
+\newcommand{\OCTICCHECKROWS}{Torus bounds $b_r$, $d=8,9$, recomputed blind & identical\\
+Method re-derives Bedratyuk--Xin's $H_5$ and $H_6$ from fresh grid data & exact, equal\\
+$H_8$: exact $a_n$, $n\le1194$ (six $62$-bit primes); determination; pole order $37$ & passes\\
+$H_8$: prediction modulo a $31$-bit prime, $n\le1600$ & mod $p$, agrees\\
+$H_8$: independent weight counting modulo $65521$ and $65519$, $n\le450$ & mod $p$, agrees\\
+$H_9$: exact $a_n$, $n\le686$; determination; pole order $47$ & passes\\
+$H_9$: prediction modulo a $31$-bit prime, $n\le1000$; weight counting, $n\le400$ & mod $p$, agrees\\}
+\newcommand{\OCTICLIMIT}{exact grid coefficients modulo six $62$-bit primes, checked out of sample and against independent weight counting}

@@ -1,0 +1,197 @@
+{
+ "schemaVersion": "1.0",
+ "contributionMap": [
+  {
+   "claim": "H(C[S^7C^3]^SL3) equals the candidate R_7 (unconditional)",
+   "unit": "statement",
+   "paperLocation": "abstract; Theorem 1",
+   "searches": [
+    {
+     "date": "2026-09-25",
+     "query": "ternary forms Poincare/Hilbert series degree 7; ternary septic; plane septic invariants",
+     "corpus": "arXiv API, Crossref, Semantic Scholar, web, Brouwer tables"
+    },
+    {
+     "date": "2026-09-26",
+     "query": "ternary septic Hilbert series; plane curve invariants Hilbert series (3 variants)",
+     "corpus": "web, arXiv, OEIS-type hits, Lercier/Olive"
+    }
+   ],
+   "closestPriorWork": "Bedratyuk, Ukr. Math. J. 62 (2011): coefficients to t^21; v0.1.0 of this work: exact to 760, conditional beyond",
+   "verdict": "new-in-bounded-search"
+  },
+  {
+   "claim": "Hilbert series of ternary octics and nonics (d = 8, 9)",
+   "unit": "object",
+   "paperLocation": "abstract; Theorem 2",
+   "searches": [
+    {
+     "date": "2026-09-26",
+     "query": "ternary octics / ternary forms degree 8, 9 Hilbert Poincare series invariants",
+     "corpus": "web, arXiv API, Crossref"
+    }
+   ],
+   "closestPriorWork": "Bedratyuk-Xin 2011 (d <= 6); Bedratyuk 0811.0256 (general formula, no new degrees)",
+   "verdict": "new-in-bounded-search"
+  },
+  {
+   "claim": "Pole orders bounded by fixed-point dimensions; reduction to the torus; torus universal denominator",
+   "unit": "method",
+   "paperLocation": "Section 1 (Method and what is new); Proposition 3; Section 3",
+   "searches": [
+    {
+     "date": "2026-09-26",
+     "query": "pole order Hilbert series root of unity fixed locus graded algebra; universal denominator Hilbert series; a priori denominator invariants reductive group",
+     "corpus": "web, arXiv"
+    }
+   ],
+   "closestPriorWork": "Derksen, J. Algebra 285 (2005), Thm 1.10, Lemma 2.2, Prop 3.3, Thm 3.4, Thm 5.1",
+   "verdict": "known-cited"
+  },
+  {
+   "claim": "Strategy: universal denominator + Knop degree + functional equation + half of the coefficients",
+   "unit": "method",
+   "paperLocation": "Section 1; Section 2",
+   "searches": [
+    {
+     "date": "2026-09-26",
+     "query": "Hilbert series universal denominator functional equation finitely many coefficients; Makam matrix semi-invariants",
+     "corpus": "arXiv full text"
+    }
+   ],
+   "closestPriorWork": "Makam, J. Algebra 454 (2016), Sections 3 and 6",
+   "verdict": "known-cited"
+  },
+  {
+   "claim": "Exhaustive computation of the torus bounds for S^d C^3, d = 7, 8, 9, and their near-sharpness (excess exactly 2 at a few small orders)",
+   "unit": "proof",
+   "paperLocation": "Section 3; Sections 4-5",
+   "searches": [
+    {
+     "date": "2026-09-26",
+     "query": "universal denominator ternary forms SL3; Derksen universal denominator examples",
+     "corpus": "Derksen 2005 full text (binary forms in Section 6 only), web"
+    }
+   ],
+   "closestPriorWork": "Derksen 2005 Section 6 treats binary forms; no ternary computation found",
+   "verdict": "new-in-bounded-search"
+  }
+ ],
+ "sourcesReadInFull": [
+  {
+   "citation": "Derksen, Universal denominators of Hilbert series, J. Algebra 285 (2005)",
+   "usedFor": "Proposition 3 and Section 3",
+   "readWhat": "full text (literature agent); Def. 1.9, Thm 1.10, Lemma 2.2, Prop 3.3, Thm 3.4, Thm 5.1 re-read by the producer"
+  },
+  {
+   "citation": "Makam, J. Algebra 454 (2016) / arXiv 1510.08420",
+   "usedFor": "strategy; Knop criterion (Thm 3.3)",
+   "readWhat": "full text, Sections 1-6"
+  },
+  {
+   "citation": "Herbig-Schwarz, arXiv 1205.4608",
+   "usedFor": "2-largeness (Thm 3.7)",
+   "readWhat": "full text"
+  },
+  {
+   "citation": "Bedratyuk-Xin, LMA 59 (2011) / arXiv 1007.1064",
+   "usedFor": "d = 5, 6 series (validation); prior frontier",
+   "readWhat": "full text (arXiv)"
+  },
+  {
+   "citation": "Bedratyuk, arXiv 0806.1920 and 0811.0256",
+   "usedFor": "septic coefficients to t^21; general formulas",
+   "readWhat": "full text"
+  }
+ ],
+ "limitationTriage": [
+  {
+   "limitation": "v0.1.0: septic identity conditional on an hsop hypothesis",
+   "closingQuestion": "Which known theorem supplies an a priori denominator?",
+   "triedOrSearched": "Derksen universal denominators (torus reduction) computed exactly",
+   "estimatedCost": "about 1 h, no compute",
+   "cheap": true,
+   "decision": "CLOSED",
+   "reasonOpen": "",
+   "whyNotClosedNow": ""
+  },
+  {
+   "limitation": "Ternary octics and nonics not computed",
+   "closingQuestion": "Does the same method reach d = 8, 9 cheaply?",
+   "triedOrSearched": "torus bound sizes: d=8 needs a_n to 1194 (89 min), d=9 to 686 (30 min)",
+   "estimatedCost": "about 2 h laptop",
+   "cheap": true,
+   "decision": "CLOSED",
+   "reasonOpen": "",
+   "whyNotClosedNow": ""
+  },
+  {
+   "limitation": "d = 10 and beyond",
+   "closingQuestion": "Is d = 10 cheap with the torus bound?",
+   "triedOrSearched": "bound degree 6564; exact a_n to 3249 needed",
+   "estimatedCost": "about 100 CPU-hours",
+   "cheap": false,
+   "decision": "OPEN",
+   "reasonOpen": "cost exceeds the cheap threshold; sharper bounds (larger centralisers) could reduce it",
+   "whyNotClosedNow": ""
+  },
+  {
+   "limitation": "Torus bounds exceed the truth by 2 at a few small orders",
+   "closingQuestion": "Would larger centralisers in Derksen's Thm 3.4 give exact multiplicities?",
+   "triedOrSearched": "pattern observed for d = 5..9",
+   "estimatedCost": "a proof and a new enumeration, several hours",
+   "cheap": false,
+   "decision": "OPEN",
+   "reasonOpen": "not needed for the theorems; relevant only to d >= 10",
+   "whyNotClosedNow": ""
+  },
+  {
+   "limitation": "Knop's and Formanek's originals not read (used via Makam's and Berele's restatements)",
+   "closingQuestion": "Can the originals be obtained quickly?",
+   "triedOrSearched": "Crossref DOIs confirmed (Knop 1986 doi:10.1007/BF01168503; Formanek 1986 doi:10.2307/2000206); full texts are publisher-hosted and were not obtained in this session",
+   "estimatedCost": "unknown (access)",
+   "cheap": false,
+   "decision": "OPEN",
+   "reasonOpen": "full text not obtained; the restatements used are in peer-reviewed papers (Makam 2016, Berele 2023) and were checked",
+   "whyNotClosedNow": ""
+  },
+  {
+   "limitation": "No formal verification; model-based review only",
+   "closingQuestion": "Is a cheap formal check available?",
+   "triedOrSearched": "none cheap: the load-bearing steps are large exact computations",
+   "estimatedCost": "weeks",
+   "cheap": false,
+   "decision": "OPEN",
+   "reasonOpen": "out of scope; disclosed",
+   "whyNotClosedNow": ""
+  },
+  {
+   "limitation": "Octic/nonic grid coefficients from one engine",
+   "closingQuestion": "Can an independent method check them cheaply?",
+   "triedOrSearched": "independent weight counting (methodAd) modulo two 16-bit primes to degrees 450/400; out-of-sample prediction mod a 31-bit prime to 1600/1000",
+   "estimatedCost": "minutes",
+   "cheap": true,
+   "decision": "CLOSED",
+   "reasonOpen": "",
+   "whyNotClosedNow": ""
+  }
+ ],
+ "extensionScout": {
+  "by": "producer (Claude), after the prior-art check",
+  "date": "2026-09-26",
+  "proposals": [
+   "apply the method to d = 8",
+   "apply to d = 9",
+   "size d = 10, 11",
+   "re-derive the known d = 5, 6 as end-to-end validation",
+   "blind recomputation of the torus bounds"
+  ],
+  "actions": [
+   "done: H_8 determined",
+   "done: H_9 determined",
+   "sized: d = 10 about 100 CPU-hours, d = 11 about 800 (left open)",
+   "done: exact agreement with Bedratyuk-Xin",
+   "done: identical for d = 5..9"
+  ]
+ }
+}

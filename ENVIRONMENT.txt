@@ -1,0 +1,5 @@
+Recorded environment (producer machine, 26 September 2026)
+macOS 27.0, Apple M2, 8 cores, 16 GB
+gcc-16 (Homebrew GCC 16.1.0) 16.1.0
+python 3.13.5 | python-flint 0.9.0 | sympy 1.14.0 | numpy 2.4.4 | scipy 1.17.1
+pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026)

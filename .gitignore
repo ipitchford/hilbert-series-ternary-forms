@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.DS_Store
+paper/*.aux
+paper/*.log
+paper/*.out
+scripts/mw5
+scripts/mw6
+scripts/methodAd
+scripts/pole_bounds_d*.json
+data/septic/methodA16
+data/septic/runs/methodA16_N120_*

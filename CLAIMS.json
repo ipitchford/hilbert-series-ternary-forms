@@ -1,0 +1,10 @@
+{"version":"0.2.0-candidate","status":"unrefereed-candidate","creator":"Anonymous","manuscript":"paper/paper.pdf",
+ "claims":[
+  {"id":"SEPTIC-SERIES","statement":"H(C[S^7C^3]^SL3, t) = R_7(t) (data/septic/d7_rational.json), unconditionally.","kind":"theorem, computer-assisted","location":"Theorem 1; Proposition 3; Section 4",
+   "dependsOn":["Derksen 2005 Thm 3.4 and 5.1 (torus bound) and Thm 1.10","Noether normalisation (pole order <= 28)","functional equation (Stanley; Knop via Makam Thm 3.3; Herbig-Schwarz Thm 3.7; Hochster-Roberts; Murthy)","exact a_n, n <= 708, from weight counting"],
+   "certificates":["scripts/certify_septic_unconditional.py","scripts/pole_bounds.py"],"notClaimed":["formal verification","methodological novelty"]},
+  {"id":"OCTIC-SERIES","statement":"H(C[S^8C^3]^SL3, t) = N_8/D_8 as in data/octic/d8_rational.json (deg D_8 = 2331, deg N_8 = 2286).","kind":"theorem, computer-assisted","location":"Theorem 2; Section 5",
+   "dependsOn":["same framework","exact a_n, n <= 1194, from the grid method (six 62-bit primes)"],"certificates":["scripts/certify_ternary.py"],"supportingChecks":["scripts/check_ternary_extra.py"],"notClaimed":["formal verification"]},
+  {"id":"NONIC-SERIES","statement":"H(C[S^9C^3]^SL3, t) = N_9/D_9 as in data/nonic/d9_rational.json (deg D_9 = 1393, deg N_9 = 1338).","kind":"theorem, computer-assisted","location":"Theorem 2; Section 5",
+   "dependsOn":["same framework","exact a_n, n <= 686, from the grid method (six 62-bit primes)"],"certificates":["scripts/certify_ternary.py"],"supportingChecks":["scripts/check_ternary_extra.py"],"notClaimed":["formal verification"]},
+  {"id":"V010-CORRECTIONS","statement":"Version 0.1.0 omitted citation of Derksen 2005 for the a priori denominator of its Section 7, and overstated the novelty of its matrix method, which follows Makam 2016 Section 6.","kind":"correction","location":"Section 1"}]}
