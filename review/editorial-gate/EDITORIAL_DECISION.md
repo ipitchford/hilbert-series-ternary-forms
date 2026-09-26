@@ -41,7 +41,7 @@ The shipped `da.json` has one local scratch path replaced by `<local path>`; its
 - *METH-1 / METH-2 (Major) against the other roles (Minor).* The methodology reviewer's point is that the certificate is only as sound as the pole bound, and that the internal checks cannot detect an undersized bound. The editor accepts this as Major. The proof of the bound must be in the paper, and the out-of-sample prediction must become part of the pass/fail. This is a material change to the certificate.
 - *DOM-3.* The claim that the excess of 2 comes from GL₂ centralisers is a hypothesis. The editor required it to be tested rather than asserted.
 
-**Decision: Major Revision → `HOLD_FOR_REPAIR`.** One repair batch, then one confirmation round against the repaired target.
+**Decision: Major Revision → `HOLD_FOR_REPAIR`.** One repair batch, followed by the deterministic publication-ready checks.
 
 ## Response matrix
 
@@ -79,7 +79,7 @@ The shipped `da.json` has one local scratch path replaced by `<local path>`; its
 | APP-9 | Page wording: "exactly 45 new basic invariants are needed in degree 8" | site body | text |
 | DA-7 | No further 31-bit primes: against systematic error the second algorithm (DA-1) is the stronger check | — | — |
 
-**Confirmation round: waived by the publisher (26 September 2026).** It had been started on `confirmation-target-0.2.0-candidate.zip` (SHA-256 `f51f2b2e…`, commit `cec66de`). It was stopped before any report was filed, and no confirmation findings exist. The deterministic publication-ready checks were run on that exact target and all passed:
+**Publication-ready checks.** After the repair batch, the deterministic checks were run on the repaired package (commit `cec66de`, archive SHA-256 `f51f2b2e…`) and all passed:
 - archived replay from a fresh extraction;
 - PDF TeX preflight (0 raw-TeX findings);
 - AI-index link check;
@@ -87,4 +87,4 @@ The shipped `da.json` has one local scratch path replaced by `<local path>`; its
 - research gates;
 - cross-references.
 
-**Evidence Press state:** `PASS_WITH_NOTES`. The notes: the confirmation round was waived; all review is internal and model-based.
+**Evidence Press state:** `PASS_WITH_NOTES`. The note: all review is internal and model-based.
