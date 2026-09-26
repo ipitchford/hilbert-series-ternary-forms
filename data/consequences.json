@@ -4,23 +4,29 @@
    {
     "degree": 6,
     "a_n": 3,
-    "decomposable_monomials_upper": 0,
+    "decomposables_dim_lower": 0,
+    "decomposables_dim_upper": 0,
     "g_n_lower": 3,
-    "g_n_upper": 3
+    "g_n_upper": 3,
+    "rule": "none"
    },
    {
     "degree": 9,
     "a_n": 13,
-    "decomposable_monomials_upper": 0,
+    "decomposables_dim_lower": 0,
+    "decomposables_dim_upper": 0,
     "g_n_lower": 13,
-    "g_n_upper": 13
+    "g_n_upper": 13,
+    "rule": "none"
    },
    {
     "degree": 12,
     "a_n": 421,
-    "decomposable_monomials_upper": 6,
+    "decomposables_dim_lower": 5,
+    "decomposables_dim_upper": 6,
     "g_n_lower": 415,
-    "g_n_upper": 420
+    "g_n_upper": 416,
+    "rule": "Hopf / monomial count"
    }
   ],
   "hsop_min_sum": 1428,
@@ -50,33 +56,51 @@
    "90": 1,
    "108": 1
   },
+  "hsop_degree_cap": 1266,
+  "hsop_solution_feasible_exact": true,
   "milp_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "hsop_min_sum_status": "solver-computed (HiGHS MILP reports optimal); not independently certified",
   "hsop_max_degree_lower_bound": 108,
   "leading_constant": "6941174994070448673394177896178733/21015184838124191396352862244258709504000000",
-  "secondaries_for_min_sum_hsop_if_free": "11452938740216240311100393528694909450"
+  "secondaries_if_min_sum_hsop_exists": "11452938740216240311100393528694909450"
  },
  "8": {
   "generators_low_degree": [
    {
     "degree": 3,
     "a_n": 1,
-    "decomposable_monomials_upper": 0,
+    "decomposables_dim_lower": 0,
+    "decomposables_dim_upper": 0,
     "g_n_lower": 1,
-    "g_n_upper": 1
+    "g_n_upper": 1,
+    "rule": "none"
    },
    {
     "degree": 6,
     "a_n": 6,
-    "decomposable_monomials_upper": 1,
+    "decomposables_dim_lower": 1,
+    "decomposables_dim_upper": 1,
     "g_n_lower": 5,
-    "g_n_upper": 5
+    "g_n_upper": 5,
+    "rule": "common factor of degree 3"
    },
    {
     "degree": 9,
     "a_n": 81,
-    "decomposable_monomials_upper": 6,
+    "decomposables_dim_lower": 6,
+    "decomposables_dim_upper": 6,
     "g_n_lower": 75,
-    "g_n_upper": 80
+    "g_n_upper": 75,
+    "rule": "common factor of degree 3"
+   },
+   {
+    "degree": 12,
+    "a_n": 1990,
+    "decomposables_dim_lower": 81,
+    "decomposables_dim_upper": 96,
+    "g_n_lower": 1894,
+    "g_n_upper": 1909,
+    "rule": "Hopf / monomial count"
    }
   ],
   "hsop_min_sum": 2391,
@@ -113,54 +137,87 @@
    "126": 1,
    "147": 1
   },
+  "hsop_degree_cap": 2283,
+  "hsop_solution_feasible_exact": true,
   "milp_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "hsop_min_sum_status": "solver-computed (HiGHS MILP reports optimal); not independently certified",
   "hsop_max_degree_lower_bound": 147,
   "leading_constant": "3232853333335344707932037345575591835725729749719611/77376420101666137834605303217743782952561353512648704000000000",
-  "secondaries_for_min_sum_hsop_if_free": "2327654400001448189711066888814426121722525419798119920"
+  "secondaries_if_min_sum_hsop_exists": "2327654400001448189711066888814426121722525419798119920"
  },
  "9": {
   "generators_low_degree": [
    {
     "degree": 4,
     "a_n": 1,
-    "decomposable_monomials_upper": 0,
+    "decomposables_dim_lower": 0,
+    "decomposables_dim_upper": 0,
     "g_n_lower": 1,
-    "g_n_upper": 1
+    "g_n_upper": 1,
+    "rule": "none"
    },
    {
     "degree": 6,
     "a_n": 6,
-    "decomposable_monomials_upper": 0,
+    "decomposables_dim_lower": 0,
+    "decomposables_dim_upper": 0,
     "g_n_lower": 6,
-    "g_n_upper": 6
+    "g_n_upper": 6,
+    "rule": "none"
    },
    {
     "degree": 7,
     "a_n": 3,
-    "decomposable_monomials_upper": 0,
+    "decomposables_dim_lower": 0,
+    "decomposables_dim_upper": 0,
     "g_n_lower": 3,
-    "g_n_upper": 3
+    "g_n_upper": 3,
+    "rule": "none"
    },
    {
     "degree": 8,
     "a_n": 46,
-    "decomposable_monomials_upper": 1,
+    "decomposables_dim_lower": 1,
+    "decomposables_dim_upper": 1,
     "g_n_lower": 45,
-    "g_n_upper": 45
+    "g_n_upper": 45,
+    "rule": "common factor of degree 4"
    },
    {
     "degree": 9,
     "a_n": 118,
-    "decomposable_monomials_upper": 0,
+    "decomposables_dim_lower": 0,
+    "decomposables_dim_upper": 0,
     "g_n_lower": 118,
-    "g_n_upper": 118
+    "g_n_upper": 118,
+    "rule": "none"
    },
    {
     "degree": 10,
     "a_n": 612,
-    "decomposable_monomials_upper": 6,
+    "decomposables_dim_lower": 6,
+    "decomposables_dim_upper": 6,
     "g_n_lower": 606,
-    "g_n_upper": 611
+    "g_n_upper": 606,
+    "rule": "common factor of degree 4"
+   },
+   {
+    "degree": 11,
+    "a_n": 2012,
+    "decomposables_dim_lower": 3,
+    "decomposables_dim_upper": 3,
+    "g_n_lower": 2009,
+    "g_n_upper": 2009,
+    "rule": "common factor of degree 4"
+   },
+   {
+    "degree": 12,
+    "a_n": 8300,
+    "decomposables_dim_lower": 46,
+    "decomposables_dim_upper": 67,
+    "g_n_lower": 8233,
+    "g_n_upper": 8254,
+    "rule": "Hopf / monomial count"
    }
   ],
   "hsop_min_sum": 1457,
@@ -206,9 +263,12 @@
    "64": 1,
    "66": 1
   },
+  "hsop_degree_cap": 1273,
+  "hsop_solution_feasible_exact": true,
   "milp_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "hsop_min_sum_status": "solver-computed (HiGHS MILP reports optimal); not independently certified",
   "hsop_max_degree_lower_bound": 64,
   "leading_constant": "33982265038660433031391145799504210481719724288616391713/1651577424771829498610721025260244417246204051259916288000000000000",
-  "secondaries_for_min_sum_hsop_if_free": "1189379276353115156098690102982647366860190350101573709955"
+  "secondaries_if_min_sum_hsop_exists": "1189379276353115156098690102982647366860190350101573709955"
  }
 }

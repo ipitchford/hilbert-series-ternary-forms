@@ -25,16 +25,19 @@ eps = sB                                     # H(1/t) = +t^36 H(t)
 shape = rem == 0 and P.degree() <= K and all((c[i] if i < len(c) else 0) == eps * (c[K - i] if K - i < len(c) else 0) for i in range(K + 1))
 half = K // 2
 ind = [int(x) for x in json.load(open(os.path.join(up, 'methodA_exact_760.json')))['coeffs']]
-a = [0] * (half + 1); Dl = [int(D[i]) for i in range(D.degree() + 1)]; Nl = [int(x) for x in Rj['N']]
-for n in range(half + 1):
+L = len(ind) - 1
+a = [0] * (L + 1); Dl = [int(D[i]) for i in range(D.degree() + 1)]; Nl = [int(x) for x in Rj['N']]
+for n in range(L + 1):
     s = Nl[n] if n < len(Nl) else 0
     for j in range(1, min(n, len(Dl) - 1) + 1): s -= Dl[j] * a[n - j]
     q_, r_ = divmod(s, Dl[0])
     if r_: sys.exit('non-integral series coefficient')
     a[n] = q_
-agree = half <= len(ind) - 1 and a == ind[:half + 1]
+agree = half <= L and a[:half + 1] == ind[:half + 1]
+beyond = a[half + 1:] == ind[half + 1:]      # exact a_n not used by the certificate: out-of-sample integer checks
 print(f"B' = prod Phi_r^p_r over {len(p)} orders; deg B' = {B.degree()}; K = {K}; coefficients needed: 0..{half} (exact data to {len(ind)-1})")
 print(f"D_R divides B': {rem == 0}; R*B' polynomial of degree <= K with P(t) = {eps:+d} t^K P(1/t): {shape}")
 print(f"R agrees with the exact a_n for n <= {half}: {agree}")
-ok = shape and agree
+print(f"out of sample: R reproduces the exact a_n for {half + 1} <= n <= {L} ({L - half} unused integers): {beyond}")
+ok = shape and agree and beyond
 print("UNCONDITIONAL SEPTIC CERTIFICATE PASSES:", ok); sys.exit(0 if ok else 1)

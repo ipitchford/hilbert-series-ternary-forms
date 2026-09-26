@@ -1,7 +1,7 @@
 __pycache__/
 *.pyc
 .DS_Store
-paper/*.aux
+paper/*.toc
 paper/*.log
 paper/*.out
 scripts/mw5
@@ -11,3 +11,5 @@ scripts/pole_bounds_d*.json
 data/septic/methodA16
 data/septic/runs/methodA16_N120_*
 receipts/
+scripts/methodAd2
+scripts/centraliser_bounds_d*.json

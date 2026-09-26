@@ -1,0 +1,84 @@
+{
+ "role": "Devil's Advocate",
+ "scope": "Frozen target hilbert-series-ternary-forms v0.2.0-candidate (commit 18eba0b, archive SHA-256 0fda3e23...3826), read-only. Read paper.md in full, pole_bounds.py, certify_ternary.py, mw5.c core loop, CLAIMS.json, PRIOR_ART.md, run logs and replay scope. Attacked the main theorem (H_7, H_8, H_9 exact) on: pole bound validity, functional-equation sign/degree, coefficient correctness, CRT bound, grid aliasing/orbit reduction. Wrote three independent from-scratch programs in <local path> chk1.py (structural checks on the rational functions plus re-comparison against every archived residue/weight-count file), wc.py (my own GL3 weight-multiplicity + Weyl-alternation DP, numpy, mod fresh primes 1000000007 and 998244353, n<=150, d=7,8,9), tb.py (my own torus-bound enumerator: brute-force torus elements of each order M<=Nmax reduced by unit scaling computed directly (no normal-form lemma), kappa via a dual-cone separation test rather than the authors' Caratheodory cone test). Total CPU about 20 s.",
+ "confidence": "High that the three stated series are correct as rational functions (all my independent attacks agreed). Medium-high that the rigorous proof chain is complete as written: it rests on citation-level statements (Derksen Thm 3.4, Knop via Makam Thm 3.3, Herbig-Schwarz Thm 3.7) that I could not open offline, but I reconstructed an elementary proof of the pole bound and the empirical out-of-sample checks corroborate the functional equation.",
+ "limitations": "I did not open Derksen 2005, Makam 2016, Knop 1986 or Herbig-Schwarz; statements of those theorems are taken from the paper and checked only for internal consistency and via reconstruction. I could not independently recompute any coefficient above n=150 (the determining ranges go to 1194 and 686); my high-degree assurance is indirect (archived out-of-sample residues re-checked by my own series expansion). I did not re-solve the hsop integer programme. I did not compile or run mw5.c/mw6.c, methodAd.c or replay.sh.",
+ "strongest_counterargument": "The octic and nonic determinations are proofs only modulo the correctness of a single C program (mw5.c) on the coefficients that nothing else computes: n = 451..1194 for d=8 (744 coefficients) and n = 401..686 for d=9. The second algorithm (weight counting) stops at 450/400 and only modulo two 16-bit primes. The out-of-sample check uses mw6.c, which is the same algorithm (same Weyl integration formula, same weight set, same orbit reduction), and the '.rerun.log' files repeat the same code at the same primes, so they only show that the run is deterministic. A common-mode defect in the grid method that switched on only above n about 400 would therefore not be caught by any independent algorithm. I also tried to break the premises. I recomputed b_r (third implementation, d=5..9: identical). I checked deg H = -dim V with sign (-1)^delta, palindromy, coprimality, the full cyclotomic factorisation, and that D divides B with uniform excess 2. I checked the CRT margins (372 bits available vs 272/276 needed; 240 vs 201 for d=7), the M > dL+4 condition, and p = 1 mod M. I recomputed a_n independently for n<=150. Nothing broke. The counterargument is also weak on its own terms. A defect in the grid method would have to produce a sequence that, completed by reciprocity from the lower half, still predicts the archived mw6 residues at a different grid size M (25605 vs 19109; 18005 vs 12425) for 406 (d=8) and 314 (d=9) further coefficients, and still gives a nonnegative series whose pole order at 1 is exactly delta. That is not credible for any realistic bug. So the objection is to how the theorem is labelled and where its assurance comes from, not to its truth.",
+ "recommendation": "Minor Revision",
+ "strengths": [
+  "Every attack I mounted failed: the torus bounds from my independent enumerator (different orbit enumeration and a different kappa test) are identical to the authors' and to the blind program for d=5..9 (e.g. d=9: b_1=53, b_2=28, b_4=16, ..., b_64=1).",
+  "My independent weight-multiplicity computation agrees with the series of N_d/D_d for all n<=150 modulo two fresh 30-bit primes for d=7,8,9, and exactly for the small coefficients (e.g. H_8 = 1+t^3+6t^6+81t^9+1990t^12+46543t^15+..., H_9 = 1+t^4+6t^6+3t^7+46t^8+118t^9+612t^10+...).",
+  "Structural checks pass exactly: N_d palindromic; D_d(1/t)t^{deg D} = (-1)^delta D_d; deg N - deg D = -dim V (-36,-45,-55); gcd(N,D)=1; D_d is fully cyclotomic with m_1 = delta; m_r <= min(delta,b_r) everywhere, with excess exactly 2 at precisely the starred orders of Table 2.",
+  "My own series expansion reproduces every archived out-of-sample residue (d=8 mod 2146928041 to n=1600; d=9 mod 2147348321 to n=1000) and every 16-bit weight-count value (n<=450 / 400), with zero mismatches.",
+  "The CRT metadata checks out: 6 distinct primes, all prime, p = 1 mod M, M = 2(dL+2)+1 > dL+4, and modulus 372 bits against 2*binom bounds of 272/276 bits (septic: 15 distinct 16-bit primes, 240 vs 201 bits). The certifier re-lifts raw residues and checks the range [0, binom], which is conservative.",
+  "The grid-engine code matches Proposition 3. It takes representatives i<j<e3 with j starting at i+1. The in-place increasing-n recurrence correctly implements multiplication by 1/(1-xt). The order-M check on omega is correct, and the M^{-2} scaling is correct.",
+  "The consequences I spot-checked are right: the g_n values and bounds follow from the a_n; c_7 = 3.3029e-10, c_8 = 4.178e-11 and c_9 = 2.058e-11 recomputed from N(1)/Q(1); the hsop divisibility claims (108, 147, 64) match m_r = 1 at those orders.",
+  "The limitations section is candid, and it already discloses the single-algorithm dependence."
+ ],
+ "issues": [
+  {
+   "id": "DA-1",
+   "severity": "Minor",
+   "location": "Sec. 3 'Data' bullets; Sec. 5 'Three kinds of check'; Table 4; Limitations bullet 2",
+   "finding": "The determining coefficients above n=450 (d=8) and n=400 (d=9) come from one implementation of one algorithm. The 'fresh 31-bit prime' check is the same algorithm (mw6.c), and the rerun logs use the same code at the same primes. The paper's framing ('two independent algorithms') can read as if the determining range were covered twice.",
+   "evidence": "data/octic/d8_L1194_p6.rerun.log and data/nonic/d9_L690_p6.rerun.log use identical primes to the original runs. Weight-counting files stop at N=450/400. Replay 'fresh' recomputes the grid only to n=200.",
+   "remedy": "State explicitly that above n=450/400 the only cross-check is the same-algorithm out-of-sample prediction, which tests the reciprocity structure rather than the engine. Preferably close the gap: run a blind, separately written grid or constant-term implementation at one fresh prime over n<=686 for d=9 (the authors' engine needs about 4-5 min per prime at this size) and, if budget allows, n<=1194 for d=8."
+  },
+  {
+   "id": "DA-2",
+   "severity": "Minor",
+   "location": "Proposition 2 proof; Sec. 4 opening paragraph",
+   "finding": "The pole bound is justified only by citing 'Der05 Thm 3.4 and its proof' (udenom(S^G) | udenom(S^T)) and Thm 5.1. No human or tool here has checked those statements against the paper. A self-contained argument exists and is short: pole order at zeta <= dim X^zeta (Derksen Thm 1.10 with M=A); every point of X^zeta lifts to a closed orbit Gv with zeta v = g v, and g can be taken semisimple via the Jordan decomposition in the reductive stabiliser in G x C^*, hence conjugate into T; and C[V]^G restricted to V_S lands in C[V_S]^T, so dim pi(V_S) <= kappa(S). This argument appears only in the docstring of scripts/pole_bounds.py, which cites a NOTE.md that is not in the package.",
+   "evidence": "scripts/pole_bounds.py docstring ('Chain (see NOTE.md): ... Lemma A ... Lemma B ... Lemma C'); NOTE.md is absent from the file list and MANIFEST.",
+   "remedy": "Add the lemma chain (5-8 lines) to Sec. 4 so that the bound does not depend on the exact wording of Derksen Thm 3.4. Ship NOTE.md or remove the reference."
+  },
+  {
+   "id": "DA-3",
+   "severity": "Note",
+   "location": "Sec. 2 bullets (Knop, Herbig-Schwarz 2-largeness, Murthy); Prop. 2",
+   "finding": "The functional equation, and hence K and the halving, rests on a chain of citations (Schwarz 1978 non-coregularity -> Herbig-Schwarz Thm 3.7 2-largeness -> Knop via Makam Thm 3.3; Hochster-Roberts + Murthy -> Gorenstein) that has been checked only by models. A wrong K or sign would silently corrupt the determination. The paper does not say that its out-of-sample checks are exactly the empirical test of this step.",
+   "evidence": "My checks confirm that the outputs are internally consistent (deg H = -dim V, sign (-1)^delta), but that is by construction. The genuine test is the agreement of the symmetric completion with the archived residues at n=1195..1600 (d=8) and 687..1000 (d=9), which I re-verified, together with the exact re-derivation for d=5,6.",
+   "remedy": "Say explicitly that the out-of-sample agreement tests the functional equation and the pole bound jointly. Quote the exact hypothesis of Knop's theorem as used."
+  },
+  {
+   "id": "DA-4",
+   "severity": "Minor",
+   "location": "Sec. 3, final Data bullet ('share no code and no mathematics beyond the definition of a_n')",
+   "finding": "This is overstated. Both engines use the same torus weight set W and Weyl's theory: the integration formula in one, the character formula in the other. A common-mode misidentification of W (or of the Weyl data) would pass their mutual check.",
+   "evidence": "mw5.c builds U=a-c, V=b-c. methodAd builds GL3 weights (a,b,c) and uses the rho=(2,1,0) alternation. My independent recomputation confirms that W and the alternation are correct, so this is wording only.",
+   "remedy": "Reword, for example: 'share no code; both rest on the weight decomposition of S^d C^3 and Weyl's formulas, used in different forms'."
+  },
+  {
+   "id": "DA-5",
+   "severity": "Minor",
+   "location": "CLAIMS.json; scripts/mw5.c header; scripts/pole_bounds.py header",
+   "finding": "The cross-references are stale. CLAIMS.json cites 'Theorem 2' for the octic and nonic series and 'Proposition 5' for the grid engine; the paper has only Theorem 1(2),(3), and the grid engine is Proposition 3. The septic claim cites 'Proposition 3', but the certificate is Proposition 2. mw5.c refers to 'Lemma 3 (Lemma 2.1 in drafts)', and pole_bounds.py refers to NOTE.md, which is not shipped.",
+   "evidence": "CLAIMS.json entries OCTIC-SERIES and NONIC-SERIES ('location': 'Theorem 2; Section 5'; 'grid-engine correctness (Proposition 5)'); SEPTIC-SERIES ('Theorem 1(1); Proposition 3').",
+   "remedy": "Renumber CLAIMS.json and the code comments against the final paper.tex. Add a replay step that greps for dangling theorem numbers."
+  },
+  {
+   "id": "DA-6",
+   "severity": "Minor",
+   "location": "Sec. 6 'Systems of parameters' (sum k_i >= 1428, 2391, 1457)",
+   "finding": "The minimum degree sums are presented as consequences 'of Theorem 1 alone', but they come from a floating-point MILP solve (HiGHS status 'Optimal') with no exact optimality certificate. The formulation implicitly bounds the candidate degree range, and that bound is not stated in the paper.",
+   "evidence": "data/consequences.json: 'milp_status': 'Optimization terminated successfully. (HiGHS Status 7: Optimal)'. I did not re-solve it.",
+   "remedy": "Either certify the minimum exactly (a small exact IP, or a dual/LP-relaxation bound plus enumeration, stating the degree cap and why it is without loss of generality) or label the numbers 'solver-computed'."
+  },
+  {
+   "id": "DA-7",
+   "severity": "Note",
+   "location": "Table 4, last row; Sec. 5",
+   "finding": "The out-of-sample checks are modulo one 31-bit prime per case. Against random corruption this is overwhelming (406 or 314 coefficients). Against a hypothetical common-mode defect, a second prime adds nothing; only a different algorithm does (see DA-1).",
+   "evidence": "d8_L1600_p31.json and d9_L1000_p31.json each list a single prime.",
+   "remedy": "Nothing needed beyond DA-1. Optionally add a second fresh prime (cost about 3-9 min per case per the logs)."
+  }
+ ],
+ "cheap_strengthening": [
+  "Run an independently written (blind) implementation of the constant-term / grid formula at one fresh prime over the full determining range for d=9 (n<=686). The authors' own engine needs about 250-300 s per prime at this size, so an independent run is minutes to tens of minutes. This removes the only single-implementation dependency for the nonic theorem. Do the same for d=8 (n<=1194; about 15 min per prime for the authors' engine) if budget allows.",
+  "Put the elementary pole-order chain (pole order <= dim X^zeta; semisimple lift into T; restriction to C[V_S]^T gives dim <= kappa(S)) into Sec. 4, so that Proposition 2 no longer depends on the exact wording of Derksen Thm 3.4; ship or delete NOTE.md.",
+  "Say in Sec. 5 that the out-of-sample agreement jointly tests the functional equation (Knop/Gorenstein) and the torus bound, since a wrong K, sign or bound would make the symmetric completion fail there.",
+  "Fix the stale theorem and proposition numbers in CLAIMS.json and the code headers, and correct the 'no mathematics in common' wording.",
+  "Certify or relabel the MILP degree-sum bounds."
+ ],
+ "summary": "I tried hard to break the main theorem and could not. Three pieces of new code agreed with the submission: an independent torus-bound enumerator (identical b_r for d=5..9), an independent weight-multiplicity computation (agreement through n=150 for d=7,8,9 at two fresh primes), and exact structural checks (palindromy, deg H = -dim V with sign (-1)^delta, coprimality, cyclotomic D dividing B with the stated uniform excess 2, CRT margins, aliasing condition). My own series expansion also matches every archived out-of-sample and weight-count residue. The strongest counterargument is that the octic and nonic coefficients above n=450/400 come from a single implementation of one algorithm; the same-algorithm fresh-prime prediction and the same-prime reruns do not remove that dependence. It is weakened because any realistic defect would have to survive the symmetric-completion prediction at a different grid size for several hundred further coefficients. The other weaknesses are expository: the pole bound relies on a citation where a short self-contained argument is available, the functional equation rests on model-checked citations, the independence claim is overstated, cross-references are stale, and the hsop bounds are solver-computed. No Critical or Major issues. Recommendation: Minor Revision."
+}

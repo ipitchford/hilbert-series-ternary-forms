@@ -1,4 +1,4 @@
-/* No aliasing: exponents satisfy |m_i| <= d n + 4 (weights d n, Weyl numerator 4) and Lemma 3 (Lemma 2.1 in drafts) needs |m_i| < M;
+/* No aliasing: exponents satisfy |m_i| <= d n + 4 (weights d n, Weyl numerator 4) and paper Proposition 3 (no aliasing) needs |m_i| < M;
    the enforced M >= 2(dL+2)+1 > dL+4 suffices.
    Faster exact Molien-Weyl engine for SL3-invariants of ternary d-ics (same maths as mw3.c).
    - Montgomery arithmetic modulo p < 2^62 (no 128-bit division);

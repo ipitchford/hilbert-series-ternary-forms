@@ -1,0 +1,110 @@
+{
+ "role": "Methodology specialist (design, proof/computation, certificate semantics, reproducibility)",
+ "scope": "Frozen target v0.2.0-candidate (commit 18eba0b, archive SHA-256 0fda3e23...3826), reviewed on a writable copy. Read paper.tex in full (Props 3, 5, 6; Lemmas 7-8; sections 4-7). Checked every line of the mw5.c code map (mw6.c by diff), methodAd.c, methodA16.c, pole_bounds.py, certify_ternary.py, certify_septic_unconditional.py, negative_controls.py, check_ternary_extra.py, check_validation.py, regenerate_exact.py, replay.py/replay.sh, and the shipped REPLAY_RECEIPT_archived.json and REPLAY_RECEIPT_fresh.json. I ran './replay.sh archived' myself: 17/17 steps PASS in 42 s, manifest unchanged before and after. Independent spot checks I wrote: (a) an exact-integer weight-counting expansion in Python (my own code; Racah-Speiser form of the alternating sum), which matches the series of R7, N8/D8 and N9/D9 for n<=21, 21 and 16, including the displayed first terms of Theorem 1; (b) the grid engine with its M guard removed, run at M = dL+5, dL+4, dL+2, dL-10, dL/2 and 2(dL+2)+1 for d=7 (L=40) and d=9 (L=30); (c) an undersized-denominator negative control: certify_ternary with one factor of Phi_64, Phi_3 or Phi_47 removed from B, d=9; (d) CRT and table bit sizes, Table 2 multiplicities and asterisks re-derived from pole_bounds.py and the rational files; (e) the septic R7 series against the exact a_n on 709..760. About 2 CPU-minutes in total. Nothing in the target was modified.",
+ "confidence": "High on the computational layer: the engines implement Propositions 5 and 6, the CRT lifting and bounds, Proposition 3's algebra (K, epsilon, the half-determination) and Table 2. Medium on the torus-bound layer: Lemma 7 and the Lemma 8 enumeration are correct as stated and the code implements them. However, I could not check the translation of Derksen Thms 3.4 and 5.1 into 'b_r = max kappa over level sets' against the source.",
+ "limitations": "I had no access to Derksen (2005), Makam (2016), Knop or Herbig-Schwarz, so the cited theorems and their restatements were taken on trust. I did not run replay fresh/full (per instruction) or any grid run above degree 40. The consequences (section 6) were not reviewed beyond the replay's recomputation check. I did not read other reviewers' reports.",
+ "strongest_counterargument": "Against my Major issues: the theorems are proofs modulo cited theorems plus Lemma 8, and Lemma 8 is proved. The out-of-sample prediction at a 31-bit prime over 406 (d=8) and 314 (d=9) extra coefficients has a chance-agreement probability near 2^-10000. My own control shows that it rejects an undersized B, and B is tight (m_r = p_r) at all but 8-10 orders per case, with the exact +2 excess pattern. For d=7, two different algorithms agree on exact integers to 760 (R7 comes from grid data, a_n from weight counting). So the results are very probably correct. My Major findings concern what the certificates and records claim to establish, not the truth of the theorems.",
+ "recommendation": "Major Revision",
+ "strengths": [
+  "Proposition 3 is correct: P = H*B has degree exactly K = deg B - dim V, B(1/t) = (-1)^{p_1} t^{-deg B} B(t) (Phi_1 = t-1 reverses to -Phi_1, the others are palindromic), so epsilon = (-1)^{delta+p_1}. The code computes the same sign (sB = (-1)^{p_1}). For d=9 (delta=47 odd, p_1=47) this gives epsilon=+1, as stated.",
+  "The CRT bound is sound and stated conservatively. sympy crt returns the least nonnegative residue, and 0 <= a_n <= C(n+dimV-1, dimV-1) < modulus, so the lift is exact; the factor 2 is unnecessary but harmless. The table bits are verified: d=7 201 vs 240 (205 at n=760); d=8 272 vs 372; d=9 276 vs 372. The largest lifted a_n has 137/198/209 bits.",
+  "The mw5.c code map is accurate line by line: lines 24, 25, 29-31, 35, 49, 51, 56 and 57-58 do what the paper says. The exception is line 65 (see METH-5). Montgomery REDC is correct for p < 2^62: Newton inverse in 6 steps, R2 = (2^64 mod p)^2, and one conditional subtraction. mw6 is correct for p < 2^31, with padded SIMD lanes zero-initialised.",
+  "Proposition 5's proof is correct: the Weyl-numerator exponent bound of 4 comes from (1,-1)+(2,1)+(1,2), and the S3-orbit reduction by 6 cancels 1/|W|. My threshold experiment shows the hypothesis M > dL+4 suffices (zero mismatches at M = dL+5) and is near-sharp: aliasing errors appear at M = dL-10 for d=7 and at M = dL/2 for both d. The engines enforce a 2x safety margin.",
+  "The six signed terms in Proposition 6 are verified against the Weyl character formula for lambda = (k,k,k), rho = (2,1,0). The knapsack truncation (coordinates <= floor(dN/3)+2) is sound because weights are nonnegative. My independent exact implementation reproduces the determined series at small n.",
+  "Lemma 7 (kappa = |S0| - rank S0) and the Lemma 8 case split are correct, and pole_bounds.py implements them: Nmax = 147/192/243 as stated, c | N normal form, and r = N/gcd(q,N). Table 2 is exactly reproduced for all three d, including the asterisks and the uniform +2 excess (deg B - deg D = 66 for d=7 checks).",
+  "The archived replay is genuinely end to end and fast. It re-lifts the raw residues rather than trusting stored integers, regenerates the bounds, and checks the manifest before and after. Negative controls reject corrupted, mislabelled, truncated and tampered inputs.",
+  "The septic certificate is logically complete given B. The exact weight-counting a_n agree with the R7 series on all of 0..760, not only on 0..708, which is two independent algorithms agreeing on exact integers."
+ ],
+ "issues": [
+  {
+   "id": "METH-1",
+   "severity": "Major",
+   "location": "paper section 4 (opening sentence), Lemma 8, Proposition 3 proof; scripts/pole_bounds.py docstring; independent/blind_torus_bounds/README.md",
+   "finding": "The load-bearing step is the identification of b_r (the exponent of Phi_r in udenom(C[V]^T)) with the maximum of dim V_S//T over level sets S(t,zeta). The paper asserts it in one sentence citing Thm 3.4 'and its proof' plus Thm 5.1; it is neither quoted nor derived. Both 'independent' programs start from this same level-set formulation. The blind README's reduction begins from 'S lies inside a level set S(t,zeta)'. So the blind reproduction checks the enumeration (Lemma 8), not the translation from Derksen. In addition, pole_bounds.py's docstring justifies the bound by a different chain, 'pole order at zeta <= dim X^zeta (Lemma A) ... (Lemma B) ... (Lemma C)' with 'see NOTE.md', and NOTE.md is not shipped. Every theorem, including the unconditional septic result, rests on this step, and an undersized b_r is exactly the failure the certificates cannot see (METH-2).",
+   "evidence": "paper.tex lines 190-195 and 227; pole_bounds.py lines 3-5; blind README section 'Reduction'. NOTE.md is absent from MANIFEST. The paper's own phrase is 'evaluates the lattice condition of [Der05, Thm 5.1] directly', but the README defines the condition via level sets and r | o(S).",
+   "remedy": "Quote Derksen Thm 5.1 (and the part of the proof of 3.4 used) verbatim with the hypotheses. Add a short lemma deriving b_r = max kappa(S(t,zeta)) from it, including why a sub-torus or an element of T (rather than a general g) suffices. State explicitly that the blind program verifies the enumeration given this formulation. Replace or remove the stale Lemma A-C docstring, or ship NOTE.md."
+  },
+  {
+   "id": "METH-2",
+   "severity": "Major",
+   "location": "scripts/certify_ternary.py; scripts/negative_controls.py; paper section 5 ('Three kinds of check lie outside the determinations') and section 3 'Data'",
+   "finding": "certify_ternary's internal checks do not test whether B is large enough, and nor does the weight-counting agreement. By construction any B yields a rational function whose series reproduces a_0..a_{K/2}. The weight-counting ranges (n <= 450 for d=8, n <= 400 for d=9) lie entirely inside that range, so they validate the engine's input coefficients and say nothing about the determination. Only the single 31-bit prediction tests the determined series out of sample. The negative controls exercise corrupted inputs but not this failure mode. 'DETERMINATION PASSES' reads as a self-certifying result, when it is conditional on METH-1.",
+   "evidence": "My control used modified copies of certify_ternary.py with one factor Phi_64, Phi_3 or Phi_47 removed from B, d=9, archived residues and no --reference. All three print 'd = 9 DETERMINATION PASSES: True', with pole order at 1 = 47, coefficients nonnegative to t^690 and the series reproducing a_0..a_{half}. check_ternary_extra.py on the wrong series: weight counting mod 65521 to n <= 400 'agrees True'; the 31-bit prediction to 1000 reports False. In the replay these wrong series are caught only by the --reference comparison and by check_ternary_extra.",
+   "remedy": "Add undersized-B negative controls (drop one factor at a tight order) and show they are rejected. Make the out-of-sample prediction a required part of the determination's pass/fail rather than a separate 'extra' step, and preferably use 2-3 fresh primes. In section 5, say that weight counting corroborates the input coefficients for n <= 450/400, and that only the prediction tests the determined function beyond the data."
+  },
+  {
+   "id": "METH-3",
+   "severity": "Major",
+   "location": "README.md (Replay section), scripts/replay.py docstring line 19, review/RESPONSE_TO_EXTERNAL_REVIEW_v0.2.md item 4.3",
+   "finding": "The package states that the producer's receipts for all three modes are shipped, including REPLAY_RECEIPT_full.json. That file is absent from the archive and from MANIFEST.sha256. The response to the external review marks this item 'Done' with 'The producer's receipts for all three modes are shipped'. As a result, no receipt anywhere records the byte-identical regeneration of the six 62-bit octic and nonic arrays, the 31-bit out-of-sample arrays or the 760-degree septic runs. The only trace of reruns is the *.rerun.log files, which record timings and a coefficient prefix, not a comparison.",
+   "evidence": "`ls` of the target root shows only REPLAY_RECEIPT_archived.json and REPLAY_RECEIPT_fresh.json. `grep -i receipt MANIFEST.sha256` lists only those two. RESPONSE line 9 makes the 'all three modes' claim.",
+   "remedy": "Either run `./replay.sh full` (about 2.5 h) and ship its receipt, or correct the README, the replay.py docstring and the response to say that the full mode was not receipted in this version."
+  },
+  {
+   "id": "METH-4",
+   "severity": "Minor",
+   "location": "REPLAY_RECEIPT_archived.json, REPLAY_RECEIPT_fresh.json, scripts/replay.py step()",
+   "finding": "The receipts do not bind to the shipped code. (a) In both shipped receipts, the recorded input hash of MANIFEST.sha256 differs from the shipped MANIFEST.sha256, so the receipts were produced against an earlier package state (unavoidable if the manifest lists the receipts, but then it should be stated). (b) The steps do not hash the scripts and binaries they execute. For example, certify_ternary.py, certify_septic_unconditional.py, mw5.c and methodAd.c are not in any step's inputs, and the compiler version is not recorded. So a receipt cannot show which code produced a PASS. All other recorded input hashes match the shipped files, and my own archived receipt has no hash issues.",
+   "evidence": "Hash comparison of every input and output in the two shipped receipts: the only mismatch is MANIFEST.sha256 in the 'manifest before replay' step. The replay.py 'inputs' lists are data-only, apart from pole_bounds.py.",
+   "remedy": "Hash every executed script and C source in each step. Record the compiler identity (`cc --version`) and the platform. Either exclude the receipts from the manifest that the receipts hash, or document the two-stage sealing."
+  },
+  {
+   "id": "METH-5",
+   "severity": "Minor",
+   "location": "paper section 3 (Data, septics; code map); scripts/mw5.c and mw6.c header comments; README Contents",
+   "finding": "There are stale or inaccurate cross-references. (1) The paper says 'FULL=1 regenerates them in about three minutes'. No FULL variable exists; the interface is `./replay.sh full`, and septic regeneration to 760 is a step within it. (2) The code map says 'Line 65 multiplies by M^{-2}'. Line 65 computes M^{-2}; lines 66-67 apply it. (3) The mw5.c and mw6.c comments cite 'Lemma 3 (Lemma 2.1 in drafts)' for the aliasing argument; in this paper it is Proposition 5. (4) The README lists paper/octic_macros.tex and 'the editorial-gate records' under review/; neither is in the package.",
+   "evidence": "paper.tex line 183; mw5.c lines 1, 65-67; README Contents table; the target's file list.",
+   "remedy": "Fix the four references. They are one-line edits."
+  },
+  {
+   "id": "METH-6",
+   "severity": "Minor",
+   "location": "paper section 3 (Data, third bullet) and Table 4",
+   "finding": "The independence of the corroborating checks is overstated. (a) 'The two algorithms share no code and no mathematics beyond the definition of a_n.' Both rest on Weyl's theory for SL3/GL3 (the integration formula versus the character formula) and on the same monomial-weight description; they are independent in code, not in mathematics. (b) The 31-bit 'fresh prime' prediction uses mw6.c, which is the same algorithm as the determining engine mw5.c at a different M and prime. So for n in (450, 1194] (d=8) and (400, 686] (d=9), the determining coefficients have only same-algorithm corroboration. Section 7 partly acknowledges this.",
+   "evidence": "Diff of mw5.c and mw6.c: identical algorithm, differing only in word size. check_ternary_extra.py reads a run32.py (mw6) file.",
+   "remedy": "Reword (a) to 'share no code; both use only Weyl's character theory'. In Table 4 and section 5, label the 31-bit prediction as a same-algorithm, different-grid check."
+  },
+  {
+   "id": "METH-7",
+   "severity": "Minor",
+   "location": "replay.sh / scripts/replay.py line 60; README Replay table",
+   "finding": "Replay usability and timing. A plain `cp -R` of the read-only frozen release preserves the r-x permissions, and replay then aborts with 'run on a writable copy' (my first attempt, exit 1). Users need `chmod -R u+w`, which is not documented. In the shipped fresh receipt, the blind-torus rerun alone takes 332 s, whereas the README says 'fresh: about 3 min'.",
+   "evidence": "My first run: output 'run on a writable copy', EXIT=1. The second run after chmod passed 17/17 in 42 s. REPLAY_RECEIPT_fresh.json step 'blind torus program rerun' has seconds = 332.0.",
+   "remedy": "Document the chmod step, or have replay.py copy itself to a temporary directory. Correct the fresh-mode timing to about 6 min."
+  },
+  {
+   "id": "METH-8",
+   "severity": "Note",
+   "location": "Table 1 caption; certify_ternary.py line 46; regenerate_exact.py",
+   "finding": "The CRT criterion is correct but uses the symmetric-range factor 2, which is unnecessary here: a_n >= 0, and the lift is taken in [0, modulus). The in-range check on the lifted values plus modulus > bound is the right test. The margins are 39, 100 and 96 bits.",
+   "evidence": "The recomputed bit sizes match Table 1 exactly.",
+   "remedy": "Optional. Say that the factor 2 is conservative."
+  },
+  {
+   "id": "METH-9",
+   "severity": "Note",
+   "location": "scripts/certify_septic_unconditional.py; paper section 5 (Septics)",
+   "finding": "The septic certificate compares R7 with the exact a_n only for n <= 708. The archived exact data agree for all of 0..760, which gives 52 free out-of-sample integer checks by a second algorithm; these are neither automated nor reported.",
+   "evidence": "My check: the R7 series equals methodA_exact_760 on 709..760 (True).",
+   "remedy": "Add the 709..760 comparison to the certificate output and the paper."
+  },
+  {
+   "id": "METH-10",
+   "severity": "Note",
+   "location": "scripts/mw5.c line 25 vs Proposition 5 and certify_ternary.py line 37",
+   "finding": "The engine enforces M >= 2(dL+2)+1, the certifier checks M > dL+4, and the proposition requires M > dL+4. This is consistent (the engine is stricter), and my threshold experiment confirms the proposition's bound is sufficient and close to sharp. No aliasing negative control is shipped.",
+   "evidence": "With the guard removed there are zero mismatches at M = dL+5, dL+4 and dL+2. There is 1 mismatch at M = dL-10 (d=7), and there are 8 (d=7) and 15 (d=9) at M = dL/2.",
+   "remedy": "Optional. Add the reduced-M aliasing run as a negative control showing the engine's output is wrong when the hypothesis fails."
+  }
+ ],
+ "cheap_strengthening": [
+  "Add undersized-B negative controls (drop one Phi_r at a tight order for d=8 and d=9) and make the out-of-sample prediction part of certify_ternary's pass/fail (METH-2). This takes seconds.",
+  "Run the 31-bit prediction at 2-3 further primes and at different M, for example with run32.py skip=1,2. This takes minutes to about an hour on this machine.",
+  "Report and automate the septic 709..760 exact agreement (METH-9). This is one line.",
+  "Ship REPLAY_RECEIPT_full.json from a 2.5 h full run, or correct the claim (METH-3).",
+  "Quote Derksen Thm 5.1 and the relevant step of the proof of Thm 3.4 in an appendix, with a short derivation of the level-set formula (METH-1). This is text only.",
+  "Hash the executed scripts and C sources and record the compiler version in every receipt step (METH-4).",
+  "Add a reduced-M aliasing negative control for the grid engine (METH-10). This takes under 1 s."
+ ],
+ "summary": "The computational design is sound and implemented as described. Proposition 3's certificate algebra (K, the reciprocity sign, the half-determination) is correct. The CRT lifts are exact, with ample margins. The mw5.c code map is accurate except for one line reference. The Proposition 6 alternating sum is correct. Lemma 7 and the Lemma 8 enumeration are correctly implemented and reproduce Table 2 exactly. I ran the archived replay (17/17 pass, 42 s), and my independent exact computation matches all three series at low degree. Three Major issues concern what is actually certified and evidenced, not the likely truth of the theorems. (1) The translation of Derksen's theorems into the level-set formula for b_r is asserted, not derived. Both torus programs share it, and a stale docstring cites a different, unshipped argument. (2) The determination step cannot detect an undersized denominator. I demonstrated that dropping a single Phi_r gives 'DETERMINATION PASSES: True', nonnegative, with the right pole order and agreeing with weight counting to n=400; only the lone 31-bit prediction rejects it. (3) The claimed full-mode receipt is not shipped. Minor issues cover receipt binding, stale references, overstated independence and replay usability. All fixes are cheap."
+}

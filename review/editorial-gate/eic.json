@@ -1,0 +1,92 @@
+{
+ "role": "Editor-in-Chief",
+ "scope": "Journal fit, significance, claim calibration, attribution, adequacy of v0.1.0 corrections and release suitability for the v0.2.0-candidate (archive SHA-256 0fda3e23..., commit 18eba0b). Read in full: paper/paper.tex, README.md, CLAIMS.json, PRIOR_ART.md, RESEARCH_GATES.json, PRE-REGISTERED.md, review/RESPONSE_TO_EXTERNAL_REVIEW_v0.2.md. Spot-checked: mw5.c code-map line numbers; certify_ternary.py bound/lift checks; data/consequences.json; theorem numbering in the compiled paper.pdf (pypdf); a bounded prior-art probe (web search; arXiv 1007.1064, 0811.0256, 1201.4448 full text). No heavy computation run; the frozen target was not modified.",
+ "confidence": "Medium-high on calibration, attribution and release-consistency findings (each checked against the files). Medium on novelty: my own probe was bounded, and zbMATH returned HTTP 403 to automated fetch.",
+ "limitations": "No independent recomputation of any series or torus bound (left to the technical referees). I did not verify the statements of Derksen Thm 3.4/5.1, Herbig-Schwarz Thm 3.7 or Knop's criterion against the originals. MathSciNet was not accessible, and zbMATH blocked automated access.",
+ "strongest_counterargument": "The contribution is a computational extension of a known method (Derksen universal denominators plus Makam's finite-determination strategy) from d = 6 to d = 7, 8, 9. The only new 'theory' is an enumeration lemma. For d = 8, 9 the exact integers come from a single engine, checked only modulo primes and to lower degrees by a second algorithm. No human specialist has examined the argument. On this view the release is a certified data deposit rather than a paper. Response: this is exactly how the manuscript describes itself ('The method is known'; theorems labelled computer-assisted; single-engine dependence disclosed in the Limitations). It also has a built-in safeguard that makes random engine errors detectable: 372-bit moduli against 272-bit bounds, with an explicit range check on every lifted a_n. For an unrefereed-preprint publisher, a candidly scoped, reproducible certificate of three new objects fits the remit.",
+ "recommendation": "Minor Revision",
+ "strengths": [
+  "Claim calibration is exemplary in the mathematics itself. The abstract states 'The method is known'. Each ingredient is attributed with theorem-level precision: Derksen Thm 1.10, 3.4 and 5.1; Makam §§3 and 6. The theorems are labelled computer-assisted, and CLAIMS.json lists 'methodological novelty' and 'formal verification' under notClaimed.",
+  "The corrections to v0.1.0 are adequate and specific. The missing Derksen citation and the overstated method novelty (Makam §6) are named in §1 and PRIOR_ART.md, v0.1.0 is not amended, and the paper says correctly that neither correction affects a stated result.",
+  "The significance is stated honestly. §6 turns the series into concrete, checkable consequences: exact low-degree generator counts, hsop divisibility and degree-sum bounds from an integer program, and leading constants. It also says explicitly what the series do not determine.",
+  "The verification design is strong. The determination is independent of any candidate for d = 8, 9. The known d = 5, 6 series are re-derived exactly. The torus bounds were computed by a blind second program. Out-of-sample prediction runs mod a 31-bit prime to degree 1600/1000. A second algorithm agrees to degree 450/400. The raw residue arrays are archived, and the checker re-lifts and range-checks them.",
+  "Pre-registration was honoured: the forecasts (cost, P(deg D < 2433)) were logged before the runs, and the outcomes are reported against them.",
+  "Every item of the external review is answered in the response matrix. The one 'could' item that was not done (explaining the excess of 2) is recorded openly as open.",
+  "Spot-checks pass: the mw5.c code-map line numbers (24, 25, 29-31, 35, 49, 51, 56-58, 65) match the source exactly. certify_ternary.py enforces 0 <= a_n <= C(n+dimV-1, dimV-1) and modulus > 2*bound. The degree arithmetic is consistent: deg D - deg N = dim V (36, 45, 55), and the d = 7 hsop-optimal multiset has 28 entries."
+ ],
+ "issues": [
+  {
+   "id": "EIC-1",
+   "severity": "Major",
+   "location": "README.md (Results, Evidence table); CLAIMS.json (location fields); review/RESPONSE_TO_EXTERNAL_REVIEW_v0.2.md (4.1, 4.4)",
+   "finding": "Cross-references to theorem, proposition and lemma numbers are wrong in the release metadata. The compiled paper.pdf has a single Theorem 1 with three parts, followed by Proposition 2 (certificate), Proposition 3 (grid engine), Proposition 4 (weight counting), Lemma 5 (kappa) and Lemma 6 (enumeration), on a shared counter. The companion files do not match. README and CLAIMS.json refer to a 'Theorem 2 (octics, nonics)' that does not exist. CLAIMS.json cites 'Proposition 3' for the septic certificate (it is Prop 2) and 'Proposition 5' for grid-engine correctness (it is Prop 3). The response matrix claims 'New Proposition 5', 'Proposition 6', 'Lemma 7' and 'Lemma 8', none of which exist. The machine-readable claim ledger and the reviewer response therefore point to non-existent statements in a release that will be immutable.",
+   "evidence": "pypdf extraction of paper/paper.pdf gives the sequence Theorem 1; Proposition 2; Proposition 3; Proposition 4; Lemma 5; Lemma 6 and nothing higher. paper.tex has \\newtheorem{proposition}[theorem] and \\newtheorem{lemma}[theorem]. README line: '**Theorem 2 (octics, d = 8, and nonics, d = 9).**' CLAIMS.json OCTIC-SERIES location: 'Theorem 2; Section 5'; dependsOn: 'grid-engine correctness (Proposition 5)'.",
+   "remedy": "Either split the main theorem into Theorem 1 (septics) and Theorem 2 (octics, nonics) in paper.tex, or update README, CLAIMS.json, RESEARCH_GATES.json and the response matrix to cite Theorem 1(1)-(3), Prop 2, Prop 3, Prop 4 and Lemmas 5-6. Add a gate check that every 'Theorem/Proposition/Lemma N' in the companion files exists in the compiled PDF. Mechanical, about 15 minutes."
+  },
+  {
+   "id": "EIC-2",
+   "severity": "Minor",
+   "location": "paper.tex §3 (Data bullet; Proposition 4 header)",
+   "finding": "There are stale reproduction pointers. The paper says 'FULL=1 regenerates them in about three minutes', but replay now uses the modes archived/fresh/full, and no FULL variable is referenced in scripts/ or replay.sh. Proposition 4 cites methodA16.c without a path: it is in data/septic/, not scripts/.",
+   "evidence": "grep for FULL in scripts/*.py, data/septic/*.py and replay.sh matches only a docstring in check_research_gates.py. `ls scripts` has no methodA16.c; it is at data/septic/methodA16.c.",
+   "remedy": "Replace 'FULL=1' with 'replay.sh full (septic step)', or name the regenerate_exact.py command. Give the full path data/septic/methodA16.c."
+  },
+  {
+   "id": "EIC-3",
+   "severity": "Minor",
+   "location": "paper.tex bibliography [Bed08]; PRIOR_ART.md; RESEARCH_GATES.json",
+   "finding": "The Bedratyuk citation conflates two papers. The title 'Analogue of the Sylvester-Cayley formula for invariants of ternary form' belongs to arXiv 0806.1920 (Mat. Visn. Nauk. Tov. Im. Shevchenka 6 (2009) 50-61). Ukr. Math. J. 62 (2010) 1810-1821 is a different paper, 'Analogue of the Cayley-Sylvester formula and the Poincaré series for an algebra of invariants of ternary form'. The companion files give the year as 2010 in one place and 2011 in another. Separately, Benanti-Boumova-Drensky-Genov-Koev (arXiv 1201.4448, §3) report that Bedratyuk computed coefficients 'of the terms of degree ≤ 30' for m ≤ 7, while the paper says 'through degree 21'. The prior-frontier statement for d = 7 should be checked against the source.",
+   "evidence": "arXiv 1201.4448 reference list, items [7] and [8]; its text reads '...first coefficients (of the terms of degree ≤ 30) of the Hilbert series ... of forms of degree m ≤ 7'. paper.tex: '\\bibitem{Bed08} ... Analogue of the Sylvester--Cayley formula ..., Ukrainian Math. J. 62 (2010) 1810--1821; arXiv:0806.1920'. PRIOR_ART.md: 'Ukr. Math. J. 62, 2011'.",
+   "remedy": "Split into two bibitems with correct venues. Verify the degree to which Bedratyuk tabulated septic coefficients (21 or 30) and state it. Optionally cite Benanti et al. 2012 as a survey of the ternary frontier. The BX title in the arXiv version adds 'and quinary'; cite the journal title consistently."
+  },
+  {
+   "id": "EIC-4",
+   "severity": "Minor",
+   "location": "README.md (Status and limitations); RESEARCH_GATES.json limitationTriage",
+   "finding": "Formanek and Berele are stale after the m4 response. The response matrix says Formanek and Berele were removed from the paper as unneeded. README still says 'Knop's and Formanek's theorems are used through published restatements', and RESEARCH_GATES lists 'Knop's and Formanek's originals not read (used via Makam's and Berele's restatements)'. Formanek's theorem was a v0.1.0 matrix-invariant ingredient; it plays no role in v0.2.",
+   "evidence": "README: 'Knop's and Formanek's theorems are used through published restatements.' paper.tex bibliography contains neither Formanek nor Berele.",
+   "remedy": "Reduce the README and the gate entry to Knop only, matching §8 of the paper."
+  },
+  {
+   "id": "EIC-5",
+   "severity": "Minor",
+   "location": "paper.tex §3, final Data bullet",
+   "finding": "The independence claim is slightly overstated. The text says 'The two algorithms share no code and no mathematics beyond the definition of a_n'. Both rest on Weyl's formulas: Prop 3 uses the Weyl integration formula and Prop 4 the Weyl character formula (the alternating sum over S_3 with rho). They are independent implementations of closely related representation-theoretic identities, not mathematically disjoint routes.",
+   "evidence": "Proof of Proposition 3: 'By the Weyl integration formula...'. Proof of Proposition 4: 'By the Weyl character formula...'.",
+   "remedy": "Reword to 'share no code; they use different algorithms (constant-term evaluation on a finite grid versus weight-multiset counting with the Weyl alternating sum)'."
+  },
+  {
+   "id": "EIC-6",
+   "severity": "Minor",
+   "location": "Abstract/README ('Within the literature we found'); PRIOR_ART.md corpus",
+   "finding": "The novelty boundary excludes zbMATH, although zbMATH Open has been free since 2021. For a classical invariant-theory object with a century of literature, including the Russian and Ukrainian traditions, a zbMATH query on ternary forms together with Poincaré or Hilbert series is the cheapest high-yield addition. The hedge is honest, but the gap is avoidable.",
+   "evidence": "PRIOR_ART.md: 'MathSciNet, zbMATH and several textbooks ... were not searched.' An automated fetch of zbmath.org returned HTTP 403, so an interactive or API query is needed.",
+   "remedy": "Run zbMATH Open queries ('ternary form* Poincaré series', 'invariants ternary septic/octic/nonic', 'Hilbert series SL3 forms'), log them in RESEARCH_GATES.json, and drop zbMATH from the not-searched list."
+  },
+  {
+   "id": "EIC-7",
+   "severity": "Note",
+   "location": "paper.tex §2 bullet on 2-largeness",
+   "finding": "The inference 'not coregular, irreducible module of a connected simple group, therefore 2-large [HS Thm 3.7]' should state explicitly that S^d C^3 (d >= 4) is not among any exceptions in the cited theorem. Knop's degree formula, and with it the whole finite-determination step, rests on this.",
+   "evidence": "The text cites [HS, Thm 3.7] with no hypothesis check. PRIOR_ART.md says Herbig-Schwarz was read in full, so the check is cheap.",
+   "remedy": "Add one sentence quoting the hypotheses of HS Thm 3.7 and confirming that they hold for S^d C^3, d = 7, 8, 9."
+  },
+  {
+   "id": "EIC-8",
+   "severity": "Note",
+   "location": "paper.tex §3/§5 and Limitations (single-engine dependence for d = 8, 9)",
+   "finding": "The paper undersells its own error detection. certify_ternary.py requires every lifted a_n to lie in [0, C(n+dimV-1, dimV-1)] while the CRT modulus exceeds twice the bound by about 100 bits (372 against 272). A corrupted residue at any single prime therefore produces an out-of-range lift with probability about 2^-100 of escaping. Only systematic, prime-independent engine errors remain, and the weight-counting and out-of-sample checks target exactly those. Stating this would make the Limitations bullet more precise without overclaiming.",
+   "evidence": "certify_ternary.py line 46 (bounds_ok) and Table 1 (modulus 372 bits against 2×bound 272/276 bits).",
+   "remedy": "Add two sentences to §5 or §8 separating random (per-prime) errors, which the redundancy detects, from systematic errors, which the second algorithm, the out-of-sample prediction and the d = 5, 6 validation address."
+  }
+ ],
+ "cheap_strengthening": [
+  "Fix all theorem, proposition and lemma locators (EIC-1) and add a gate script that cross-checks cited numbers against the compiled PDF (about 15-20 min).",
+  "Run a zbMATH Open prior-art query and log it in RESEARCH_GATES.json (about 20 min).",
+  "Verify Bedratyuk's tabulated septic range (21 or 30) and fix the conflated bibitem (about 20 min).",
+  "Add the per-prime redundancy argument (EIC-8) to the Limitations, turning 'single engine' into a precise residual-risk statement (10 min).",
+  "Extend weight counting (methodAd) for d = 9 to degree 686 at two or three 16-bit primes. If the measured runtime to 400 permits (please report it), this would give the nonic determination a second-algorithm agreement over the full determining range, mod p. It is plausibly under 2 h, but the producer should confirm from logged timings before committing.",
+  "Quote the hypotheses of HS Thm 3.7 and check them for S^d C^3 (EIC-7) (10 min)."
+ ],
+ "summary": "A candidly scoped computational extension: the Hilbert series of SL3-invariants of ternary septics (unconditional, closing v0.1.0's conditional claim), octics and nonics, obtained by a method explicitly attributed to Derksen (2005) and Makam (2016). Claims are well calibrated in the paper: computer-assisted, no methodological novelty, novelty stated as 'in the bounded search', with limitations and model-only review disclosed. The v0.1.0 attribution corrections are specific and adequate. Significance is modest but concrete (§6) and honestly framed; the title and abstract do not overstate. It fits an unrefereed-preprint publisher. What blocks release is metadata consistency, not mathematics. README, CLAIMS.json and the response matrix cite a Theorem 2, Propositions 5-6 and Lemmas 7-8 that do not exist in the compiled PDF. Minor items: a stale FULL=1 pointer, a conflated Bedratyuk citation and a possibly understated prior range (21 against 30), stale Formanek/Berele mentions, and a slightly overstated independence of the two algorithms. zbMATH Open should be searched. Recommendation: Minor Revision. All fixes are mechanical or under 1 h, after which the release is suitable."
+}

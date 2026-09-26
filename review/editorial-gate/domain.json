@@ -1,0 +1,99 @@
+{
+ "role": "Domain specialist (invariant theory / commutative algebra)",
+ "scope": "Frozen target v0.2.0-candidate (archive SHA-256 0fda3e23..., commit 18eba0b), read-only. Read in full: paper/paper.md (rendering of paper.tex), PRIOR_ART.md, RESEARCH_GATES.json, CLAIMS.json, relevant parts of scripts/consequences.py and scripts/pole_bounds.py. Primary sources checked against the paper's citations: Derksen arXiv math/0305111 (Def 1.9, Thm 1.10, Prop 3.3, Thm 3.4 and its proof, Thm 5.1, Sec. 6), Makam arXiv 1510.08420 (Thm 3.3 as quoted), Herbig-Schwarz arXiv 1205.4608 (Thm 3.7 as quoted), Bedratyuk arXiv 0806.1920 (septic coefficients), Bedratyuk 0811.0256, Benanti-Boumova-Drensky-Genov-Koev arXiv 1201.4448 (literature survey section). Independent computations on a private copy (all under 2 CPU-min): degrees of D and N, palindromy, low-degree coefficients of H_7, H_8, H_9, agreement with Bedratyuk through t^21, generator counts, the hsop MILP re-run with a larger degree cap, positivity/integrality of the numerator for the MILP-optimal degree multisets, and two hand checks of the centraliser explanation of the 'excess 2'. Web search for prior computations (ternary septics/octics/nonics; Brouwer; Bedratyuk; Xin; Broer; Dixmier; Brouwer-Popoviciu). MathSciNet/zbMATH not accessible; Broer's CWI Tract and Knop's original were not read.",
+ "confidence": "High for the theoretical framework (Proposition 2 chain, use of Knop/Stanley/Hochster-Roberts/Murthy/Herbig-Schwarz) and for the Section 6 corrections below; medium-high for novelty (bounded search, no MathSciNet/zbMATH); I did not re-verify the large exact coefficient computations (other roles).",
+ "limitations": "No access to MathSciNet/zbMATH, Broer (CWI Tract 84) or Knop 1986. The centraliser explanation of the excess-2 pattern was checked by hand for d=7, r=2 and r=4 only, plus the exact degree bookkeeping (deg B - deg D = 2*sum of phi(r) over asterisked r for all three d); it is not a full re-enumeration. I did not audit the C engines.",
+ "strongest_counterargument": "A skeptic can say the release is a routine application of a known method (Derksen universal denominators + Knop degree + Gorenstein reciprocity + finite determination, i.e. Makam's strategy) and its value rests entirely on large computations checked only by the producer's own programs. For octics and nonics the determining coefficients come from a single engine. Against this: the paper states plainly that the method is known, the certificates are exact and reproducible, the d=5,6 re-derivation and the out-of-sample predictions modulo a fresh prime are meaningful checks, and new exact Hilbert series for d=7,8,9 are a legitimate data contribution in classical invariant theory. I found no prior computation of these series.",
+ "recommendation": "Minor Revision",
+ "strengths": [
+  "The theoretical chain in Proposition 2 is correct. Pole order <= exponent in udenom(A) (A is a submodule of itself). udenom(S^G) | udenom(S^T) is Derksen Thm 3.4 with H = T. The cap by delta follows from homogeneous Noether normalisation. Gorenstein follows from Hochster-Roberts plus factoriality (SL3 has no characters) plus Murthy. deg H = -dim V follows from Knop's criterion; Makam Thm 3.3 is quoted accurately (codim{v : dim G_v > 0} >= 2). 2-largeness from Herbig-Schwarz Thm 3.7 ('connected simple G, irreducible non-coregular V => 2-large') is quoted accurately. S^dC^3 is non-coregular for d >= 4 (Schwarz 1978). Stanley's reciprocity with rho = -deg H = dim V is correct.",
+  "The sign and degree bookkeeping checks out: K = deg B - dim V = 1416, 2388, 1372. I verified deg D = 1386, 2331, 1393 and palindromic N of degree 1350, 2286, 1338 = deg D - dim V.",
+  "The multiplicity table satisfies a structural consistency check I carried out independently. For d = 7, 8 the series lies in t^3, which forces m_{3s} = m_s for every s coprime to 3. This holds for every such pair in Table 2.",
+  "Lemma 5, kappa(S) = |S_0| - rank S_0, correctly specialises Derksen Thm 5.1 to the torus case. The enumeration logic of Lemma 6 is sound.",
+  "The septic series agrees with Bedratyuk's published coefficients 3, 13, 421, 4992, 60303, 548966 (degrees 6 to 21), which I rechecked against arXiv:0806.1920.",
+  "The exact generator counts stated as exact are correct: d=7 g6=3, g9=13; d=8 g3=1, g6=5; d=9 g4=1, g6=6, g7=3, g8=45 (the only decomposable in degree 8 is f4^2), g9=118 (no degree-9 monomials in lower generators).",
+  "The hsop lower bounds 1428, 2391, 1457 survive the checks I ran (see DOM-2). For each MILP-optimal degree multiset, H*prod(1-t^k_i) is a polynomial with nonnegative coefficients and an integer value at 1, so the extra necessary conditions (Cohen-Macaulay positivity, integrality of the number of secondaries) do not raise the bound.",
+  "Novelty and priority are handled honestly. The paper claims no methodological novelty, credits Derksen 2005 and Makam 2016 accurately, and publicly corrects v0.1.0's attribution omissions. The 'new in the bounded search' verdicts are appropriately hedged. My own search found no prior complete series for d >= 7; Brouwer's tables cover binary forms only, and Bedratyuk-Xin stop at d = 6."
+ ],
+ "issues": [
+  {
+   "id": "DOM-1",
+   "severity": "Minor",
+   "location": "Section 6, 'Minimal generators in low degree'; CLAIMS.json CONSEQUENCES; scripts/consequences.py",
+   "finding": "The stated ranges are correct but needlessly loose, because the criterion 'M_n <= 1' ignores two elementary facts. First, in a domain multiplication by a nonzero element is injective. Second, Hopf's lemma: for a bilinear map with no zero divisors, dim(V*W) >= dim V + dim W - 1. (1) d=8, degree 9: every decomposable has the form c*A_6 with dim A_6 = a_6 = 6, so dim(A_+^2)_9 = 6 exactly and g_9 = 75 exactly, not 75..80. (2) d=9, degree 10: every decomposable lies in f4*A_6, so dim = 6 and g_10 = 606 exactly, not 606..611. Likewise g_11 = 2012 - 3 = 2009 exactly (decomposables = f4*A_7). (3) d=7, degree 12: decomposables = A_6*A_6 with dim A_6 = 3. Hopf gives dim >= 5. A 2-dimensional kernel of Sym^2 A_6 -> A_12 is impossible: a pencil of plane conics contains a singular member, whose linear factors would give a product of two nonzero elements equal to 0. Hence 415 <= g_12 <= 416, not 415..420.",
+   "evidence": "Coefficients recomputed from data/*/d{7,8,9}_rational.json: d=7 a_12=421; d=8 a_6=6, a_9=81; d=9 a_4=1, a_6=6, a_7=3, a_10=612, a_11=2012. consequences.json records g_n_upper = a_n - 1 whenever M_n > 1.",
+   "remedy": "Replace the M_n <= 1 rule with: if all degree-n decomposables lie in f*A_{n-deg f} for a single generator f, then dim = a_{n-deg f'}; otherwise use Hopf's bound. Report g_9 = 75 (d=8), g_10 = 606 and g_11 = 2009 (d=9), and 415 <= g_12 <= 416 (d=7). Update CLAIMS.json and consequences.json to match."
+  },
+  {
+   "id": "DOM-2",
+   "severity": "Minor",
+   "location": "Section 6 'Systems of parameters'; scripts/consequences.py lines 48-62",
+   "finding": "The MILP that gives the degree-sum lower bounds restricts the candidate degrees to k <= 1000 and does not justify this truncation. A multiset with a smaller sum could in principle use one large degree divisible by many r at once, for example 1080 = lcm(108, 90, ...). Degrees up to S - (delta-1)*k_min must be allowed: 1266, 2283 and 1273 for d = 7, 8, 9. The published numbers are nevertheless correct. The bound also comes from a floating-point MILP solver without an exact certificate.",
+   "evidence": "I re-ran the same MILP with degrees up to 2400 (which covers all three caps). The optima are unchanged: 1428, 2391, 1457, with maximum degrees 108, 147, 66.",
+   "remedy": "Set the degree cap from the a priori bound and say so in the text and the script. Optionally certify optimality exactly, for example by an exact dual bound or by exhaustive branch-and-bound on the small residual problem."
+  },
+  {
+   "id": "DOM-3",
+   "severity": "Minor",
+   "location": "Table 2 caption; Section 8 Limitations (d=10); RESEARCH_GATES.json limitationTriage 'excess of 2' (OPEN, 'not cheap')",
+   "finding": "The recurring 'excess of exactly 2' is not a mysterious pattern. The torus bound replaces the centraliser Z_G(t) by T. For t with a repeated eigenvalue, t = diag(s, s, s^-2), the centraliser is S(GL2 x GL1), and dim Z_G(t) - dim T = 2. By Derksen Thm 1.10(a) and the proof of Thm 3.4 (via Prop 3.3), m_r(udenom C[V]^G) = dim (V//G)^{mu_r} = max over (g, zeta) of dim pi(V_{g,zeta}). pi restricted to V_{g,zeta} factors through V_{g,zeta}//Z_G(g), so m_r <= max dim V_{g,zeta}//Z_G(g): an elementary refinement. The comparison with Derksen Sec. 6 is apt: in SL2 no noncentral torus element has a larger centraliser, so the torus bound is sharp for binary forms. The limitation is therefore closable with known theory, and cheaply. RESEARCH_GATES misjudges it as 'several hours, not cheap' and 'relevant only to d >= 10'. It also bears on the interpretation of the tables and on the cost of d = 10.",
+   "evidence": "Hand checks for d=7. r=2: s=-1 gives V_S = S^7 + S^5 + S^3 + S^1 (binary forms in x, y times z^c, c even), dim 20. Quotient by T: 18 = b_2. Quotient by GL2, with scalar weights of both signs: 16 = m_2. r=4: V_S = S^7 + S^3, dim 12. Quotient by T: 10 = b_4. Quotient by GL2: 8 = m_4. Globally, deg B - deg D = 1452-1386 = 66 = 2*sum phi(r) over the asterisked r in {2,4,5,6,9,12,15,18}. Likewise 102 for d=8 and 34 for d=9.",
+   "remedy": "Add a remark explaining the excess via the GL2 centralisers, citing Derksen Prop 3.3 / Thm 3.4 proof and Luna-Richardson (1979) for V^H//N(H) -> V//G. Ideally, implement the centraliser-refined bound (a small extension of pole_bounds.py covering elements with a repeated eigenvalue). This would likely make the a priori denominator equal to the least denominator for d=7,8,9 and shrink the d=10 requirement. Re-triage the gate entry as cheap."
+  },
+  {
+   "id": "DOM-4",
+   "severity": "Minor",
+   "location": "Section 6 'Systems of parameters'; PRIOR_ART.md; RESEARCH_GATES contributionMap (structural consequences)",
+   "finding": "Deriving divisibility and degree constraints on hsops from the cyclotomic multiplicities of the least denominator is established technique, and it is uncited. Dixmier's criterion for the degrees of an hsop and Brouwer-Popoviciu, 'The degrees of a system of parameters of the ring of invariants of a binary form' (Transformation Groups 2015/16, arXiv 1404.5722), use the divisibility condition from the Hilbert series denominator systematically for binary forms. The statement 'Whether an hsop with minimal degree sum exists is not determined by the series' is correct. But the known tool that would decide it is Dixmier's criterion together with the Hilbert-Mumford description of the nullcone, and it should be named.",
+   "evidence": "Brouwer-Popoviciu abstract ('divisibility condition'); Dixmier, Quelques aspects de la theorie des invariants / Dixmier's criterion as used there.",
+   "remedy": "Cite Dixmier and Brouwer-Popoviciu for the method in Section 6 and in the contribution map (verdict: method known, numbers new). Name Dixmier's criterion as the route to deciding hsop existence."
+  },
+  {
+   "id": "DOM-5",
+   "severity": "Minor",
+   "location": "PRIOR_ART.md results table; paper bibliography [Bed08]; Introduction",
+   "finding": "The prior-art record has small inconsistencies and one missing source. (a) PRIOR_ART.md cites Bedratyuk, Ukr. Math. J. 62 (2011); the paper cites 62 (2010) 1810-1821. The arXiv journal-ref says 2010. The bibliography title also mixes the Mat. Visn. NTSh version (Sylvester-Cayley analogue, 2009) with the Ukr. Mat. Zh. paper (Cayley-Sylvester formula and the Poincare series, 2010). (b) Benanti-Boumova-Drensky-Genov-Koev (arXiv 1201.4448, Serdica Math. J. 2012) report that Bedratyuk's formulas yielded terms of degree <= 30 for m <= 7. The paper says 'through degree 21', which matches arXiv 0806.1920 but may understate the published Ukr. Mat. Zh. version. This survey is also absent from the searched corpus. (c) Luna-Richardson and Popov's factoriality result are not cited where they would naturally appear.",
+   "evidence": "arXiv 0806.1920 journal-ref: Ukr. Math. J. 62 (2010) no. 11, 1810-1821; its P7 is given to t^21. Benanti et al. arXiv 1201.4448, Sec. on SL_d invariants: 'first coefficients (of the terms of degree <= 30) ... of forms of degree m <= 7'.",
+   "remedy": "Harmonise the year and title. Check the Ukr. Mat. Zh. version and state the actual prior coefficient range (the R_7 coefficients agree with Bedratyuk through t^30 if that range is confirmed; I computed a_24..a_30 = 4322559, 29021602, 172200163 for comparison). Add Benanti et al. to the corpus."
+  },
+  {
+   "id": "DOM-6",
+   "severity": "Minor",
+   "location": "Section 8 Limitations; RESEARCH_GATES 'Octic/nonic grid coefficients from one engine' (marked CLOSED)",
+   "finding": "Marking single-engine dependence as CLOSED overstates the case. The weight-counting check is modular and stops at degree 450/400, well below the determining ranges 1194/686. Two independent integer-level closures exist and are not discussed: (i) run Proposition 4 over enough primes to reach n = 1194 and 686; (ii) compute the leading Laurent coefficient c_d = lim (1-t)^delta H independently from the Weyl integration formula (the residue at t=1 of the Molien-Weyl integral, i.e. a Duistermaat-Heckman/volume-type integral) and compare it with the exact c_d in consequences.json. c_d depends on the whole rational function, so it is a genuine global check.",
+   "evidence": "Paper Section 3 and Table 3. RESEARCH_GATES decision 'CLOSED' for this limitation, while the paper's own Limitations still lists it.",
+   "remedy": "Re-label the gate entry as PARTIAL, or implement (i) or (ii)."
+  },
+  {
+   "id": "DOM-7",
+   "severity": "Note",
+   "location": "Section 4 (definition of b_r); Section 6 hsop bullets; Proposition 2",
+   "finding": "Wording and precision. (a) 'the set of weights on which some t in T acts by some primitive r-th root zeta' should read 'for a fixed pair (t, zeta)'. (b) 'a member whose degree is divisible by 108, one divisible by 90, one divisible by 87' suggests distinct members, which is not implied; one degree could be divisible by several of these. (c) epsilon = (-1)^(delta + p_1) equals +1 identically, because b_1 = dim V//T = dim V - 2 >= delta, so p_1 = delta. Saying so avoids implying a case check.",
+   "evidence": "Text of Sections 2, 4 and 6.",
+   "remedy": "Reword as indicated."
+  },
+  {
+   "id": "DOM-8",
+   "severity": "Note",
+   "location": "Section 2; RESEARCH_GATES limitation 'Knop's and Formanek's originals not read'",
+   "finding": "I checked the restatements used against the sources available. Makam Thm 3.3 (arXiv) states: G semisimple connected; deg H = -dim V iff codim{v : dim G_v > 0} >= 2. Herbig-Schwarz Thm 3.7 states: G connected simple and V irreducible non-coregular imply V 2-large. 2-largeness implies the codimension condition by definition. The use is correct. Knop 1986 remains unread (disclosed). Knop's 1989 canonical-module paper would give an alternative route to the a-invariant and the Gorenstein symmetry.",
+   "evidence": "Makam arXiv 1510.08420 lines around Thm 3.3; Herbig-Schwarz arXiv 1205.4608 Thm 3.7.",
+   "remedy": "None required. Optionally cite Knop, 'Der kanonische Modul eines Invariantenrings', J. Algebra 127 (1989)."
+  }
+ ],
+ "known_theorems_closing_limitations": [
+  "Excess of exactly 2 in the torus bounds: Derksen 2005 Thm 1.10(a) with Prop 3.3 and the proof of Thm 3.4 give m_r(udenom C[V]^G) = max over (g, zeta) of dim pi(V_{g,zeta}) <= dim V_{g,zeta}//Z_G(g). Luna-Richardson (1979) identifies the image. For t = diag(s, s, s^-2), Z_G(t) = GL2 has dimension 2 more than T, which explains the excess. Checked for d=7, r=2 and r=4, and consistent with deg B - deg D = 2*sum phi(r) over the starred orders for d = 7, 8, 9.",
+  "d = 10 cost: the same centraliser refinement lowers deg B, and hence the number of exact coefficients needed. Beyond that the 64-weight limit is an engineering constraint, not a mathematical one. Iterated-residue evaluation of the Molien-Weyl integral (Derksen-Kemper; Bedratyuk-Xin / Xin's MacMahon-type algorithms) is a known alternative route to the full rational function.",
+  "Existence and degrees of an actual hsop: Dixmier's criterion together with the Hilbert-Mumford criterion for the nullcone, as in Brouwer-Popoviciu for binary forms.",
+  "Octic/nonic single-engine dependence: the independent integer-level checks in DOM-6 (weight counting to full range; Weyl-integral computation of the leading constant c_d).",
+  "Knop's criterion use: Makam Thm 3.3 plus Herbig-Schwarz Thm 3.7 (both verified as quoted). Knop 1989 (canonical module) is an alternative citation."
+ ],
+ "cheap_strengthening": [
+  "Upgrade the generator counts (DOM-1): g_9 = 75 (d=8), g_10 = 606 and g_11 = 2009 (d=9), and 415 <= g_12 <= 416 (d=7). This is a few lines of argument and needs no computation.",
+  "Justify the MILP degree cap and re-run it with the cap k <= S - (delta-1)k_min (DOM-2). I did this; the results are unchanged.",
+  "Add the GL2-centraliser remark and, ideally, the refined bound in pole_bounds.py (DOM-3). This likely makes the a priori denominator equal to the least denominator for d=7,8,9.",
+  "Record that the MILP-optimal degree multisets pass the Cohen-Macaulay positivity and integrality tests. I checked this: the numerators are nonnegative, and P(1) equals the secondaries_for_min_sum_hsop_if_free values.",
+  "Cite Dixmier / Brouwer-Popoviciu and Benanti et al., and harmonise the Bedratyuk citation (DOM-4, DOM-5)."
+ ],
+ "summary": "The mathematics is sound. The framework (Derksen torus universal denominator, Noether cap, Hochster-Roberts + factoriality + Murthy for Gorenstein, Knop via Makam Thm 3.3 with Herbig-Schwarz 2-largeness, Stanley reciprocity, finite determination) is correctly applied to SL3 acting on S^dC^3 for d = 7, 8, 9. The cited theorem statements match the sources. The paper is candid that the method is Derksen's and Makam's, and my search found no prior computation of these series. The septic series matches Bedratyuk through t^21. I found no Critical or Major issues. The Section 6 exact generator counts are right, but several ranges can be sharpened to exact values or near-exact ranges by elementary arguments (DOM-1). The hsop MILP truncates candidate degrees at 1000 without justification, although re-running with an adequate cap confirms the bounds (DOM-2). The 'excess of 2' limitation is explained, and closable, by GL2 centralisers of torus elements with a repeated eigenvalue using Derksen's own framework (DOM-3). The hsop-constraint technique should credit Dixmier and Brouwer-Popoviciu (DOM-4). There are small citation inconsistencies (DOM-5), and the gate over-closes single-engine dependence (DOM-6). Recommendation: Minor Revision."
+}

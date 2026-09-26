@@ -1,5 +1,5 @@
 /* No aliasing: the t^n coefficient has exponents |m_i| <= d n + 4 (weights contribute d n, the Weyl numerator 4);
-   Lemma 3 (Lemma 2.1 in drafts) needs |m_i| < M, so M >= 2(dL+2)+1 > dL+4 is sufficient.
+   paper Proposition 3 (no aliasing) needs |m_i| < M, so M >= 2(dL+2)+1 > dL+4 is sufficient.
    mw6: 32-bit Montgomery version of mw5 (S3-orbit Molien-Weyl engine for ternary d-ics), p < 2^31.
    Same mathematics as mw5.c; lanes of a batch are independent so the inner loop vectorises (NEON umull).
    Usage: mw6 d L p M -> L+1 residues mod p. */

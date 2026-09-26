@@ -1,7 +1,7 @@
 """Rigorous upper bounds b_r >= (pole order of H(C[S^d C^3]^SL3, t) at primitive r-th roots of unity).
 
-Chain (see NOTE.md): pole order at zeta <= dim X^zeta (Lemma A), X = V//G; X^zeta = union over torus elements t of
-pi(V_S), S = {w in W : chi_w(t) = zeta} (Lemma B); dim pi(V_S) <= dim V_S//T = kappa(S) (Lemma C);
+Chain (paper Lemmas 5-7): pole order at zeta <= dim X^zeta (Lemma 5), X = V//G; X^zeta = union over torus elements t of
+pi(V_S), S = {w in W : chi_w(t) = zeta} (Lemma 6); dim pi(V_S) <= dim V_S//T = kappa(S) (Lemma 7);
 kappa(S) = |S0| - rank(S0), S0 = {w in S : -w in cone(S)}.
 Level sets S = W ∩ phi^{-1}(zeta) for a homomorphism phi: Z^2 -> C^*. Cases:
  (i) rank(S - S) = 2: ker(phi) has finite index N <= max|det| of two weight differences, Z^2/ker cyclic, r = order of w0.

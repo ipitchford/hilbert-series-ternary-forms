@@ -11,7 +11,7 @@ ok = True
 for d, f in [(5, 'd5_L160_p4.json'), (6, 'd6_L120_p4.json')]:
     import tempfile
     tmp = os.path.join(tempfile.mkdtemp(), f'd{d}_rational.json')
-    r = subprocess.run([sys.executable, os.path.join(here, 'certify_ternary.py'), str(d), os.path.join(V, f), '--write', tmp], capture_output=True, text=True)
+    r = subprocess.run([sys.executable, os.path.join(here, 'certify_ternary.py'), str(d), os.path.join(V, f), '--no-predict', '--write', tmp], capture_output=True, text=True)
     if r.returncode != 0: print(r.stdout[-500:]); sys.exit(1)
     mine = json.load(open(tmp))
     N = fmpz_poly([int(x) for x in mine['N']]); D = fmpz_poly(mine['D'])

@@ -1,0 +1,98 @@
+{
+ "role": "Applications / cross-disciplinary specialist (semantic bridge, reuse, practical implications, omitted constraints, misuse)",
+ "scope": "Frozen v0.2.0-candidate archive (commit 18eba0b, SHA-256 0fda3e23...826): README, AI_INDEX.md, CLAIMS.json, .zenodo.json, CITATION.cff, paper.tex/pdf/md, data/*/d*_rational.json, data/consequences.json, replay.sh/replay.py, CI workflow, MANIFEST, producer receipts; plus the planned public page body.md and meta.json (including narration). Independent computations on a writable copy: loaded all three rational functions, expanded series, checked degrees, palindromy, reducedness (gcd), cyclotomic factorisation vs the 'cyclotomic' dicts and paper Table 3, deg H = -dim V, the hsop MILP witnesses, c_d and secondary counts; ran `replay.sh archived` (PASSED, 43 s, OMP_NUM_THREADS=2).",
+ "confidence": "High for the data/number-consistency findings (computed directly); high for the cross-reference findings (checked against the compiled PDF and paper.md); medium for public-page wording judgements.",
+ "limitations": "Did not run fresh or full replay modes (CPU budget); did not verify Bedratyuk's degree-21 septic coefficients or the C engines' correctness; did not check CI actually ran on GitHub; did not read the model-review files in depth. Numbers were checked for internal consistency, not independently recomputed from first principles.",
+ "strongest_counterargument": "All the substantive data are correct and reusable: every headline number in the paper, README, CLAIMS, body and narration that I checked matches the data files, the archived replay passes end-to-end, and the §6 consequences are stated carefully in the paper. The problems found are documentation drift (theorem/proposition numbering, stale metadata, a not-yet-shipped full receipt) that a copy-edit fixes without touching the science, so one could argue these are Minor.",
+ "recommendation": "Minor Revision",
+ "strengths": [
+  "Rational functions load and expand exactly to the stated leading terms: H_7 = 1+3t^6+13t^9+421t^12+4992t^15, H_8 = 1+t^3+6t^6+81t^9+1990t^12+46543t^15, H_9 = 1+t^4+6t^6+3t^7+46t^8+118t^9+612t^10+2012t^11.",
+  "Degrees verified: (deg D, deg N) = (1386,1350), (2331,2286), (1393,1338); N palindromic in all three; gcd(N,D)=1 (least denominators); deg H = -36, -45, -55 = -dim V; pole order at t=1 = 28, 37, 47 = Krull dimension; the d=8,9 'cyclotomic' dicts match an actual factorisation of D and paper Table 3.",
+  "data/consequences.json is internally consistent: each MILP witness has exactly delta degrees, sums to 1428/2391/1457, satisfies every m_r constraint, contains 108/147/64; leading_constant equals lim (1-t)^delta H; secondaries value equals c_d * prod k_i; generator bounds (e.g. d=9 g_8=45, g_9=118) follow from a_n and M_n<=1 as the paper states.",
+  "Paper §6 is carefully bounded: it defines g_n, explains when the bound is tight, gives intervals where it is not (e.g. 415<=g_12<=420), and has an explicit 'What is not determined' paragraph (no generators, no actual hsop, no CI question).",
+  "`replay.sh archived` passed on a fresh writable copy in ~43 s, including negative controls, manifest before/after, and recomputation of consequences; it fails fast with a clear message on a read-only tree; compiler auto-detection falls back to shasum on systems without sha256sum.",
+  "Candidate status, AI production, model-only review, no formal verification and 'method not new' (Derksen, Makam) are prominent in README, AI_INDEX, CLAIMS notClaimed, body.md, abstract and narration.",
+  "Public page's 'Who should care' table pairs each audience with a caution, which is good practice against misuse."
+ ],
+ "issues": [
+  {
+   "id": "APP-1",
+   "severity": "Major",
+   "location": "README.md (Results), CLAIMS.json (locations), AI_INDEX.md (Replay), body.md (Technical account; What would improve), meta.json (semanticBridge)",
+   "finding": "Theorem/proposition/lemma numbers cited outside the paper do not match the compiled paper. The paper has a single Theorem 1 with parts (1)-(3), Proposition 2 (certificate), Proposition 3 (grid engine), Proposition 4 (weight counting), Lemma 5 (kappa), Lemma 6 (enumeration). The companion documents cite 'Theorem 2' for octics/nonics, 'Proposition 3' for the certificate, 'Propositions 5 and 6' for the engines, 'Lemmas 7-8' and 'Lemma 8'.",
+   "evidence": "pdftotext paper.pdf and paper.md show Proposition 2/3/4, Lemma 5/6, Theorem 1 only. README: 'Theorem 2 (octics, d = 8, and nonics, d = 9)'. CLAIMS OCTIC/NONIC location 'Theorem 2; Section 5' and 'grid-engine correctness (Proposition 5)'; SEPTIC location 'Proposition 3'. AI_INDEX: 'paper §3 (Propositions 5 and 6, with a code map)'. body.md: 'Lemmas 7–8', 'Proposition 5', 'Proposition 6', 'Specialist checking of Propositions 5–6 and Lemma 8'. meta.semanticBridge: 'Propositions 5-6 ... Lemmas 7-8 ... Proposition 3 turns finitely many coefficients into the full series'. Replay receipt labels ('Theorem 1(2)', 'Theorem 1(3)') are correct, so the documents disagree even with the receipts.",
+   "remedy": "Replace with Theorem 1(1)-(3), Proposition 2 (certificate), Propositions 3-4 (engines), Lemmas 5-6 (torus) throughout README, CLAIMS.json, AI_INDEX.md, body.md and meta.json; or refer by label name ('grid-engine proposition') to be numbering-proof. A specialist asked to 'check Propositions 5-6 and Lemma 8' currently cannot find them."
+  },
+  {
+   "id": "APP-2",
+   "severity": "Major",
+   "location": "README.md (Replay), meta.json assurance.internalReplay / availability / dataEnvironmentReproducibility, operatingModel.humanJudgmentGates",
+   "finding": "Evidence claimed is not in the frozen archive, and several assurance fields are stale copies from v0.1.0. (a) README says the producer receipts are shipped as REPLAY_RECEIPT_archived/fresh/full.json, and meta.internalReplay (state 'passed') links REPLAY_RECEIPT_full.json, but the archive and MANIFEST contain only the archived and fresh receipts. (b) meta.assurance.availability says 'Public GitHub prerelease v0.1.0-candidate and published Zenodo record (3 files each)' with state 'passed' — wrong version, and a post-publication check recorded as passed before publication. (c) dataEnvironmentReproducibility evidenceUrl points to github.com/ipitchford/hilbert-series-matrix-septic-invariants/actions (the v0.1 repository), not hilbert-series-ternary-forms. (d) humanJudgmentGates says 'Preserve ... the conditional septic wording', but the septic result is now unconditional.",
+   "evidence": "ls of archive root: REPLAY_RECEIPT_archived.json, REPLAY_RECEIPT_fresh.json only; MANIFEST.sha256 lists only those two. meta.json fields quoted above.",
+   "remedy": "Either ship REPLAY_RECEIPT_full.json in the release (and MANIFEST) once the full run completes, or remove the claim from README and set internalReplay to archived+fresh only with the full mode described as 'documented, receipt pending'. Correct the availability note to v0.2.0-candidate and fill it only after readback; fix the CI URL to the ternary-forms repository; replace 'conditional septic wording' with 'unconditional septic wording limited to computer-assisted status'."
+  },
+  {
+   "id": "APP-3",
+   "severity": "Minor",
+   "location": "data/septic/d7_rational.json vs data/octic/d8_rational.json, data/nonic/d9_rational.json; README; paper",
+   "finding": "The machine-readable files have no documented schema, and the schemas differ in ways a tool builder would trip on. N is stored as JSON strings but D as JSON integers (undocumented). The key 'K' means deg N (1350) in the d=7 file but deg B - dim V (2388, 1372) in the d=8, 9 files, which is the paper's K. The d=7 file lacks 'cyclotomic' and 'bound_degree' but carries 'primes_used' (8 primes) and 'stable_on_last_prime' — leftovers of v0.1's modular reconstruction that could suggest the septic series still rests on stabilisation heuristics. The sign convention (Φ_1 written as 1-t so D(0)=1; D is antipalindromic for d=8,9) is also not stated.",
+   "evidence": "Key listing: d7 {D,K=1350,N,d,eps,primes_used,stable_on_last_prime}; d8 {D,K=2388,N,bound_degree,cyclotomic,d,eps}; d9 {..., K=1372}. fmpz_poly(j['N']) raises TypeError until strings are cast to int.",
+   "remedy": "Add a short 'Data format' section to README (or data/README.md): H = N(t)/D(t), coefficient lists in ascending degree, N as decimal strings for exactness, D(0)=1, meaning of K, eps, cyclotomic, bound_degree. Harmonise d7 (add cyclotomic/bound_degree, K=1416 or rename), and either drop or explain primes_used/stable_on_last_prime as historical v0.1 provenance not used by the certificate. Optionally ship a 10-line loader that prints the first terms."
+  },
+  {
+   "id": "APP-4",
+   "severity": "Minor",
+   "location": "meta.json narration; body.md 'Technical account' (Coefficients)",
+   "finding": "The narration says the coefficients 'are computed exactly, by two independent algorithms working modulo large primes'. For octics and nonics the determining coefficients come from one algorithm (the grid engine); the second (weight counting) agrees only modulo two 16-bit primes and only to degrees 450/400, below the needed 1194/686; for septics only weight counting is used. The paper's Limitations states this correctly; the narration's limitation paragraph does not, and 'large primes' does not describe the 16-bit checks. body.md's 'Two independent algorithms supply them' has the same tilt, though its Limits bullet corrects it.",
+   "evidence": "paper §7 Limitations bullet 2; Table 4 'mod p, agree' rows; narration text in meta.json.",
+   "remedy": "Narration: 'computed exactly with one algorithm at several large primes, and spot-checked modulo primes by a second, independent algorithm'. body.md: 'An exact algorithm supplies them and a second algorithm checks them modulo primes to lower degree'."
+  },
+  {
+   "id": "APP-5",
+   "severity": "Minor",
+   "location": "README.md and AI_INDEX.md (Status/Trust boundaries); paper §3",
+   "finding": "README and AI_INDEX say 'Knop's and Formanek's theorems are used through published restatements', but Formanek is no longer used or cited in v0.2 (the response to external review says Formanek and Berele were removed). Paper §3 says 'FULL=1 regenerates them in about three minutes', but replay uses modes (archived/fresh/full) and regenerate_exact.py has no FULL variable. README contents table lists paper/octic_macros.tex (absent), omits paper/paper.md, and says review/ contains 'the editorial-gate records' (absent in the frozen archive).",
+   "evidence": "grep: Formanek appears only in README:60, AI_INDEX:28, RESEARCH_GATES.json and the review response; paper.tex:183 FULL=1; `ls paper review`.",
+   "remedy": "Drop Formanek from README/AI_INDEX (and update the RESEARCH_GATES limitation text); replace FULL=1 with './replay.sh full' (and correct 'three minutes' if the septic regeneration in full mode takes longer); fix the contents table; add the editorial-gate records or remove the claim."
+  },
+  {
+   "id": "APP-6",
+   "severity": "Minor",
+   "location": "body.md 'Summary' and 'Why the problem matters'",
+   "finding": "The lay summary says the series 'was known for curves of degree up to 6', and the section 'Why the problem matters' says 'the frontier stood at degree 6 for fifteen years', without the 'within the literature we found' qualifier used in the paper, README and meta abstract. MathSciNet and zbMATH were not searched.",
+   "evidence": "PRIOR_ART.md line 7; paper §1 'MathSciNet and zbMATH were not searched'.",
+   "remedy": "Add 'as far as we could find' to both sentences."
+  },
+  {
+   "id": "APP-7",
+   "severity": "Minor",
+   "location": "meta.json keyResults[3]; body.md Summary bullet",
+   "finding": "The wording of the hsop consequence can be misread. The keyResult says 'Every system of parameters must include degrees divisible by 108 (septics), 147 (octics) or 64 (nonics)'. Here 'or' should be 'respectively', and 'homogeneous' is dropped (the constraint holds only for homogeneous systems of parameters). The body's 'must include one of degree divisible by 108' also drops 'homogeneous'. A casual reader could also take 1428 etc. as the degree sum of an existing hsop; the paper says existence is not determined.",
+   "evidence": "paper §6 'Systems of parameters' and the closing sentence of that paragraph.",
+   "remedy": "'Every homogeneous system of parameters has a member of degree divisible by 108, 147 and 64 for d = 7, 8, 9 respectively, and degree sum at least 1428, 2391 and 1457 (whether these minima are attained is open).'"
+  },
+  {
+   "id": "APP-8",
+   "severity": "Note",
+   "location": "data/consequences.json key 'secondaries_for_min_sum_hsop_if_free'",
+   "finding": "The name implies the conditional is freeness, but a Cohen–Macaulay ring is always free over an hsop. The real conditional is that an hsop with the MILP-optimal degrees exists. The value is correct: c_d * prod k_i equals N(1), because the extra cyclotomic factor Q has Q(1)=1.",
+   "evidence": "Computed prod(1-t^{k_i})/D = Q with Q(1)=1 for all three d; value matches.",
+   "remedy": "Rename to 'secondaries_if_min_sum_hsop_exists' or document it in the data-format section."
+  },
+  {
+   "id": "APP-9",
+   "severity": "Note",
+   "location": "body.md Summary ('45 basic invariants of degree 8'); narration",
+   "finding": "'Basic invariants of degree 8' is correct: it is the number of minimal generators in that degree, and the count is well defined. Some lay readers may still read it as the total number of basic invariants. The specialist section's g_8=45 is unambiguous.",
+   "evidence": "paper §6 definition of g_n.",
+   "remedy": "Optionally write 'exactly 45 new basic invariants are needed in degree 8 (and 118 in degree 9)'."
+  }
+ ],
+ "cheap_strengthening": [
+  "Add a data/README.md (or README section) with the JSON schema, conventions (ascending coefficients, D(0)=1, N as strings) and a 10-line loader that reproduces the leading terms quoted in the paper; also export the first ~200 a_n per d as a plain CSV for users who do not want to expand a 2331-degree denominator.",
+  "Add a numbering-proof check to replay/consistency: grep README/CLAIMS/AI_INDEX/body for 'Proposition N'/'Lemma N'/'Theorem N' and compare with the .aux labels.",
+  "Give the factored form of each least denominator as a machine-readable list of (r, m_r) for d=7 too, matching Table 3.",
+  "Provide Macaulay2/Magma/Sage one-liners (or files) defining H_d, since those are the tools invariant theorists will use to test generator/hsop candidates against the series."
+ ],
+ "summary": "From the reuse side the release is sound. The three rational functions load, are in lowest terms, have the stated degrees, palindromy, pole orders and functional-equation degree, and expand to exactly the quoted leading terms. The §6 consequences in consequences.json are internally consistent and stated with appropriate care in the paper. The archived replay passes on a fresh copy in under a minute. The problems are in the documents surrounding the paper. Every external cross-reference to theorem, proposition and lemma numbers (README, CLAIMS, AI_INDEX, public page, meta) points to numbers that do not exist in the compiled paper. The full-mode receipt is claimed and linked as 'passed' but is not in the frozen archive. The meta assurance block carries stale v0.1 text (availability note, CI URL to the old repo, 'conditional septic wording'). The data files lack a schema, and the key K means different things in different files. The narration overstates the two-algorithm cross-check. None of this touches the mathematics, but APP-1 and APP-2 should be fixed before publication. Recommendation: Minor Revision."
+}

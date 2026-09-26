@@ -56,3 +56,19 @@
 - Lifted coefficients: identical to the earlier archived lists for both d = 8 and d = 9. The raw per-prime arrays are now archived.
 - `certify_ternary.py` re-lifts the arrays, checks every congruence, and reproduces `d8_rational.json` and `d9_rational.json` exactly.
 - Five negative controls (`scripts/negative_controls.py`) are all rejected.
+
+## Second-algorithm exact check and centraliser test (26 September 2026, after the editorial gate)
+
+These were **not formally pre-registered**. The expectations below were stated in the working log before the runs finished, not written to this file beforehand.
+
+**Second algorithm (DA-1, DOM-6).** Expected: weight counting at enough 16-bit primes reproduces the grid engine's integers exactly.
+- d = 9, n ≤ 690, 18 primes: **equal for every n** (`data/nonic/wc_exact/`).
+- d = 8, n ≤ 1194, 17 primes: **equal for every n** (`data/octic/wc_exact/`). The modulus exceeds the doubled bound only narrowly (both about 272 bits); the check is a strict inequality and passes.
+- Along the way: `methodAd.c` needs about 24 GB for d = 8 at n = 1194. The packed `methodAd2.c` needs about 6 GB and is byte-identical to `methodAd.c` wherever both run.
+
+**Centraliser refinement (DOM-3).** The reviewer's hypothesis was that GL₂ centralisers explain the recurring excess of 2. **Outcome: largely refuted.**
+- The refined bound is valid, and never below the true multiplicity for d = 5–9.
+- It removes the excess only at r = 2 for d = 5, 7, 8.
+- The other maxima come from level sets of regular torus elements.
+
+**Generator counts (DOM-1).** Expected (reviewer's values): g₉ = 75 (d = 8), g₁₀ = 606 and g₁₁ = 2009 (d = 9), 415 ≤ g₁₂ ≤ 416 (d = 7). **Outcome: all reproduced.**

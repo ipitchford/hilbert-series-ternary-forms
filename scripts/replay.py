@@ -24,6 +24,7 @@ LEVELS = {'archived': 0, 'fresh': 1, 'full': 2}
 if MODE not in LEVELS: sys.exit(__doc__)
 PY = sys.executable
 steps = []
+cc = None
 REDACT = [(PY, 'python'), (ROOT, '.')]   # receipts record portable commands, never local paths
 
 def portable(text):
@@ -47,8 +48,15 @@ def step(name, level, cmd, cwd='.', inputs=(), outputs=(), rng='', expect=None, 
         print(r.stdout[-2000:], r.stderr[-2000:]); finish(False)
 
 def finish(ok):
+    code = sorted(os.path.relpath(os.path.join(dp, f), ROOT) for dp, _, fs in os.walk(ROOT) for f in fs
+                  if f.endswith(('.py', '.c', '.sh')) and 'receipts' not in dp)
+    cc_id = subprocess.run([cc, '--version'], capture_output=True, text=True).stdout.splitlines()[:1] if cc else []
     rec = {"mode": MODE, "passed": ok, "completedAt": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
-           "python": sys.version.split()[0], "steps": steps}
+           "python": sys.version.split()[0], "platform": sys.platform + ' ' + os.uname().machine,
+           "compiler": (os.path.basename(cc) + ': ' + cc_id[0]) if cc_id else None,
+           "manifestSha256": sha('MANIFEST.sha256'),
+           "codeSha256": {f: sha(f) for f in code},   # every script and C source in the package at replay time
+           "steps": steps}
     leaked = [x for x in (ROOT, os.path.expanduser('~')) if x in json.dumps(rec)]
     if leaked: print("receipt would record local paths:", leaked); rec["passed"] = ok = False
     os.makedirs(os.path.join(ROOT, 'receipts'), exist_ok=True)
@@ -60,7 +68,7 @@ cc = os.environ.get('CC') or next(c for c in ['gcc-16', 'gcc-15', 'gcc-14', 'gcc
 if not os.access(os.path.join(ROOT, 'scripts'), os.W_OK): sys.exit('run on a writable copy')
 check = 'sha256sum' if shutil.which('sha256sum') else 'shasum -a 256'
 step('manifest before replay', 'archived', f'{check} -c MANIFEST.sha256 --quiet', shell=True, inputs=['MANIFEST.sha256'])
-for src, cwd in [('mw5.c', 'scripts'), ('mw6.c', 'scripts'), ('methodAd.c', 'scripts'), ('methodA16.c', 'data/septic')]:
+for src, cwd in [('mw5.c', 'scripts'), ('mw6.c', 'scripts'), ('methodAd.c', 'scripts'), ('methodAd2.c', 'scripts'), ('methodA16.c', 'data/septic')]:
     step(f'build {src}', 'archived', [cc, '-O3', '-fopenmp', src, '-o', src[:-2]], cwd=cwd, inputs=[f'{cwd}/{src}'])
 step('torus bounds: our enumerator (fresh) vs archived blind output, d = 5..9', 'archived',
      [PY, '-c', "import json,subprocess,sys\nok=True\nfor d in (5,6,7,8,9):\n subprocess.run([sys.executable,'pole_bounds.py',str(d)],check=True,capture_output=True)\n a={int(k):v[0] for k,v in json.load(open(f'pole_bounds_d{d}.json')).items() if v[0]>0}\n t=json.load(open(f'../independent/blind_torus_bounds/results_d{d}.json')); t=t.get('b_r',t)\n b={int(k):int(v) for k,v in t.items() if int(v)>0}\n ok&=a==b\nprint('TORUS BOUNDS AGREE:',ok); sys.exit(0 if ok else 1)"],
@@ -74,11 +82,18 @@ step('Theorem 1(1): septic certificate (bounds regenerated)', 'archived', [PY, '
 for d, g, ref, extra in [(8, 'data/octic/d8_L1194_p6.json', 'data/octic/d8_rational.json', ['data/octic/d8_L1600_p31.json', 'data/octic/wc_d8_N450_p65521.txt', 'data/octic/wc_d8_N450_p65519.txt']),
                          (9, 'data/nonic/d9_L690_p6.json', 'data/nonic/d9_rational.json', ['data/nonic/d9_L1000_p31.json', 'data/nonic/wc_d9_N400_p65521.txt', 'data/nonic/wc_d9_N400_p65519.txt'])]:
     step(f'Theorem 1({d-6}): re-lift six archived residue arrays, determine H_{d}, compare with reference', 'archived',
-         [PY, 'certify_ternary.py', str(d), '../' + g, '--reference', '../' + ref], cwd='scripts', inputs=[g, ref], expect='PASSES: True')
+         [PY, 'certify_ternary.py', str(d), '../' + g, '--predict', '../' + extra[0], '--reference', '../' + ref], cwd='scripts', inputs=[g, extra[0], ref], expect='PASSES: True')
     step(f'H_{d}: out-of-sample prediction and weight-counting agreement (archived residues)', 'archived',
          [PY, 'check_ternary_extra.py', str(d), '../' + ref] + ['../' + e for e in extra], cwd='scripts', inputs=[ref] + extra, expect='PASS: True')
 step('negative controls: corrupted residues, wrong degree label, truncated array and tampered reference are all rejected', 'archived',
      [PY, 'negative_controls.py'], cwd='scripts', inputs=['data/octic/d8_L1194_p6.json', 'data/nonic/d9_L690_p6.json'], expect='REJECTED: True')
+for d, N, folder in [(8, 1194, 'octic'), (9, 690, 'nonic')]:
+    step(f'second algorithm, d = {d}: re-lift the archived weight-counting arrays (n <= {N}) and require equality with the grid coefficients', 'archived',
+         [PY, 'wc_exact.py', 'lift', str(d), str(N)], cwd='scripts', inputs=[f'data/{folder}/d{d}_L{1194 if d == 8 else 690}_p6.json'], rng=f'n <= {N}', expect='AGREEMENT PASSES: True')
+step('centraliser-refined bounds recomputed; never below the true multiplicities (paper Remark 9)', 'archived', [PY, 'centraliser_bounds.py'], cwd='scripts',
+     rng='d = 5..9', expect='CONSISTENT: True')
+step('cross-references: every Theorem/Proposition/Lemma/Remark number cited outside the paper exists in it', 'archived', [PY, 'check_refs.py'], cwd='scripts',
+     inputs=['paper/paper.aux'], expect='VALID: True')
 step('consequences (generators, hsop constraints, leading constants) recomputed and compared', 'archived', [PY, 'consequences.py', '--check'], cwd='scripts',
      inputs=['data/consequences.json'], expect='True')
 step('research gates', 'archived', [PY, 'scripts/check_research_gates.py', '.'], inputs=['RESEARCH_GATES.json'], expect='"passed"')
@@ -94,6 +109,8 @@ step('septic weight counting regenerated to degree 120 (15 primes) and lifted', 
 step('fresh grid prime (d = 8, 62-bit, to degree 200) and weight counting mod 65497 (d = 8, 9, to 60) vs determined series', 'fresh',
      [PY, '-c', "import json,subprocess,sys\nfrom sympy import isprime\nok=True\nfor d,f in ((8,'../data/octic/d8_rational.json'),(9,'../data/nonic/d9_rational.json')):\n R=json.load(open(f)); D=[int(x) for x in R['D']]; N=[int(x) for x in R['N']]\n L=200; a=[0]*(L+1)\n for n in range(L+1):\n  v=N[n] if n<len(N) else 0\n  for j in range(1,min(n,len(D)-1)+1): v-=D[j]*a[n-j]\n  a[n]=v//D[0]\n if d==8:\n  M=2*(8*L+2)+1; q=(2**62-12345)//M\n  while not isprime(q*M+1): q-=1\n  p=q*M+1; out=subprocess.run(['./mw5','8',str(L),str(p),str(M)],capture_output=True,text=True,check=True).stdout.split()\n  ok&=all(a[n]%p==int(out[n]) for n in range(L+1))\n wc=subprocess.run(['./methodAd',str(d),'60','65497'],capture_output=True,text=True,check=True).stdout.split('\\n')\n ok&=all(a[int(l.split()[0])]%65497==int(l.split()[1]) for l in wc if l.strip())\nprint('FRESH SPOT CHECKS:',ok); sys.exit(0 if ok else 1)"],
      cwd='scripts', rng='grid n <= 200; weight counting n <= 60', expect='CHECKS: True')
+step('second algorithm, d = 9: the 18 weight-counting arrays regenerated (n <= 690), byte-compared and lifted', 'fresh',
+     [PY, 'wc_exact.py', 'fresh', '9', '690'], cwd='scripts', rng='n <= 690', expect='AGREEMENT PASSES: True')
 # ---- full ----
 step('septic weight counting regenerated to degree 760 (15 primes), byte-compared and lifted', 'full', [PY, 'regenerate_exact.py', 'fresh', '760'], cwd='data/septic', rng='n <= 760', expect='PASSES: True')
 for d, L, out in [(8, 1194, 'data/octic/d8_L1194_p6.json'), (9, 690, 'data/nonic/d9_L690_p6.json')]:
@@ -107,7 +124,9 @@ for d, N, folder in [(8, 450, 'octic'), (9, 400, 'nonic')]:
     for p in (65521, 65519):
         step(f'd = {d}: weight counting mod {p} regenerated to degree {N} and byte-compared', 'full',
              f'cd scripts && ./methodAd {d} {N} {p} > {tmp}/w.txt && cmp {tmp}/w.txt ../data/{folder}/wc_d{d}_N{N}_p{p}.txt && echo IDENTICAL', shell=True, rng=f'n <= {N}', expect='IDENTICAL')
+step('second algorithm, d = 8: the 17 weight-counting arrays regenerated (n <= 1194; about 7 GB), byte-compared and lifted', 'full',
+     [PY, 'wc_exact.py', 'fresh', '8', '1194'], cwd='scripts', rng='n <= 1194', expect='AGREEMENT PASSES: True')
 for f in os.listdir(os.path.join(ROOT, 'scripts')):
-    if f.startswith('pole_bounds_d') and f.endswith('.json'): os.remove(os.path.join(ROOT, 'scripts', f))
+    if f.startswith(('pole_bounds_d', 'centraliser_bounds_d')) and f.endswith('.json'): os.remove(os.path.join(ROOT, 'scripts', f))
 step('manifest after replay: no shipped file was modified', 'archived', f'{check} -c MANIFEST.sha256 --quiet', shell=True)
 finish(all(s['passed'] for s in steps))

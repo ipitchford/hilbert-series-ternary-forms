@@ -1,9 +1,14 @@
 """Determine and certify H_d(t), the Hilbert series of C[S^d C^3]^SL3.
-Usage: certify_ternary.py d grid.json [--reference rational.json] [--write out.json]
+Usage: certify_ternary.py d grid.json --predict grid31.json [--predict ...] [--reference rational.json] [--write out.json]
+       certify_ternary.py d grid.json --no-predict ...     (validation on known cases only: d = 5, 6)
 The grid file must contain the raw per-prime residue arrays ('residues'); the script CRT-lifts them itself, checks every
 congruence, array length, prime, M and the coefficient bound, and (with --reference) compares the determined rational
 function with an immutable reference file. Nothing is written unless --write is given, and only after all checks pass.
-Inputs: torus bounds b_r (pole_bounds.py d; Derksen Thm 3.4 + 5.1); exact a_n for n <= floor(K/2) from grid residues
+The out-of-sample prediction is part of the pass/fail: the internal checks cannot detect an undersized denominator
+bound B (any B yields a function reproducing a_0..a_{K/2}), so the determined function must also predict the residues of
+at least one further prime file (run32.py; a different prime and grid size) beyond the data used.
+--drop-factor r (negative controls only) lowers the exponent of Phi_r in B by one; the run must then FAIL.
+Inputs: pole-order bounds b_r (pole_bounds.py d; Lemmas 5-8 of the paper); exact a_n for n <= floor(K/2) from grid residues
 modulo several primes (CRT); functional equation H(1/t) = (-1)^delta t^dimV H(t), delta = dimV - 8.
 Steps: B = prod Phi_r^{min(delta,b_r)}; P_n = sum_j B_j a_{n-j} for n <= K/2; P_{K-n} = eps P_n; H = P/B in lowest terms.
 Checks: primes distinct and prime, p = 1 mod M, M > dL+4; modulus > 2*C(K/2+dimV-1, dimV-1); lifted a_n in range;
@@ -18,12 +23,18 @@ args = sys.argv[1:]
 def opt(name):
     if name in args: i = args.index(name); v = args[i + 1]; del args[i:i + 2]; return v
     return None
-reference = opt('--reference'); writeto = opt('--write')
+reference = opt('--reference'); writeto = opt('--write'); drop = opt('--drop-factor')
+predicts = []
+while '--predict' in args: predicts.append(opt('--predict'))
+no_predict = '--no-predict' in args
+if no_predict: args.remove('--no-predict')
 d = int(args[0]); gridfile = args[1]
 subprocess.run([sys.executable, PB, str(d)], cwd=here, check=True, capture_output=True)
 b = {int(k): v[0] for k, v in json.load(open(os.path.join(here, f'pole_bounds_d{d}.json'))).items()}
 dimV = (d + 1) * (d + 2) // 2; delta = dimV - 8
 p = {r: min(delta, k) for r, k in b.items() if k > 0}
+if drop is not None:
+    p[int(drop)] -= 1; print(f"NEGATIVE CONTROL: exponent of Phi_{drop} in B lowered to {p[int(drop)]}")
 B = fmpz_poly([1])
 for r, e in p.items():
     for _ in range(e): B *= fmpz_poly.cyclotomic(r)
@@ -85,6 +96,19 @@ print(f"series of N/D reproduces a_0..a_{half}: {reproduces}; coefficients nonne
 print("cyclotomic multiplicities:", cyc)
 print(f"re-lifted a_n from {len(primes)} raw residue arrays: every congruence holds {congruent}; equals the stored lifted list {matches_stored}")
 if reference: print(f"determined rational function equals the reference {os.path.basename(reference)}: {ref_ok}")
-ok = meta and bounds_ok and reproduces and m1 == delta and nonneg and congruent and matches_stored and ref_ok
+goods = []
+for f in predicts:
+    h = json.load(open(f)); q = h['primes'][0]; Lq = h['L']; rq = [int(x) for x in h['residues'][0]]
+    sq = [0] * (Lq + 1)
+    for n in range(Lq + 1):
+        v = Nl[n] if n < len(Nl) else 0
+        for j in range(1, min(n, len(Dl) - 1) + 1): v -= Dl[j] * sq[n - j]
+        sq[n] = v // Dl[0]
+    good = isprime(q) and (q - 1) % h['M'] == 0 and h['M'] > d * Lq + 4 and Lq > half and all(sq[n] % q == rq[n] for n in range(Lq + 1))
+    print(f"out-of-sample prediction: prime {q}, M = {h['M']}, determined H agrees for every n <= {Lq} (data used: n <= {half}): {good}")
+    goods.append(good)
+pred_ok = no_predict or (len(goods) > 0 and all(goods))
+if not predicts and not no_predict: print("no --predict file given: the determination is not certified")
+ok = meta and bounds_ok and reproduces and m1 == delta and nonneg and congruent and matches_stored and ref_ok and pred_ok
 if ok and writeto: json.dump(result, open(writeto, 'w'))
 print(f"d = {d} DETERMINATION PASSES:", ok); sys.exit(0 if ok else 1)

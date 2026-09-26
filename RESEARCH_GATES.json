@@ -4,7 +4,7 @@
   {
    "claim": "H(C[S^7C^3]^SL3) equals the candidate R_7 (unconditional)",
    "unit": "statement",
-   "paperLocation": "abstract; Theorem 1",
+   "paperLocation": "abstract; Theorem 1(1)",
    "searches": [
     {
      "date": "2026-09-25",
@@ -15,6 +15,11 @@
      "date": "2026-09-26",
      "query": "ternary septic Hilbert series; plane curve invariants Hilbert series (3 variants)",
      "corpus": "web, arXiv, OEIS-type hits, Lercier/Olive"
+    },
+    {
+     "date": "2026-09-26",
+     "query": "zbMATH Open: 'ternary form Poincare series invariants'; 'Hilbert series invariants ternary forms'; 'ternary septic/octic/nonic invariants'; 'Poincare series SL3 invariants forms'; 'invariants plane curves degree seven'; 'algebra of invariants ternary form degree'; 'Poincare series algebra of invariants'",
+     "corpus": "zbMATH Open API (added after the editorial gate, EIC-6)"
     }
    ],
    "closestPriorWork": "Bedratyuk, Ukr. Math. J. 62 (2011): coefficients to t^21; v0.1.0 of this work: exact to 760, conditional beyond",
@@ -23,12 +28,17 @@
   {
    "claim": "Hilbert series of ternary octics and nonics (d = 8, 9)",
    "unit": "object",
-   "paperLocation": "abstract; Theorem 2",
+   "paperLocation": "abstract; Theorem 1(2),(3)",
    "searches": [
     {
      "date": "2026-09-26",
      "query": "ternary octics / ternary forms degree 8, 9 Hilbert Poincare series invariants",
      "corpus": "web, arXiv API, Crossref"
+    },
+    {
+     "date": "2026-09-26",
+     "query": "zbMATH Open: 'ternary form Poincare series invariants'; 'Hilbert series invariants ternary forms'; 'ternary septic/octic/nonic invariants'; 'Poincare series SL3 invariants forms'; 'invariants plane curves degree seven'; 'algebra of invariants ternary form degree'; 'Poincare series algebra of invariants'",
+     "corpus": "zbMATH Open API (added after the editorial gate, EIC-6)"
     }
    ],
    "closestPriorWork": "Bedratyuk-Xin 2011 (d <= 6); Bedratyuk 0811.0256 (general formula, no new degrees)",
@@ -37,7 +47,7 @@
   {
    "claim": "Pole orders bounded by fixed-point dimensions; reduction to the torus; torus universal denominator",
    "unit": "method",
-   "paperLocation": "Section 1 (Method and what is new); Proposition 3; Section 3",
+   "paperLocation": "Section 1 (Method and what is new); Proposition 2; Lemmas 5-8",
    "searches": [
     {
      "date": "2026-09-26",
@@ -65,7 +75,7 @@
   {
    "claim": "Exhaustive computation of the torus bounds for S^d C^3, d = 7, 8, 9, and their near-sharpness (excess exactly 2 at a few small orders)",
    "unit": "proof",
-   "paperLocation": "Section 3; Sections 4-5",
+   "paperLocation": "Section 4 (Lemmas 5-8, Remark 9); Section 5",
    "searches": [
     {
      "date": "2026-09-26",
@@ -87,14 +97,15 @@
      "corpus": "web, arXiv"
     }
    ],
-   "closestPriorWork": "none found for d = 7, 8, 9 (the method of deriving generator counts from Hilbert series is standard)",
-   "verdict": "new-in-bounded-search"
+   "closestPriorWork": "none found for d = 7, 8, 9 (the method of deriving generator counts from Hilbert series is standard); hsop constraints from the least denominator: Dixmier, Acta Sci. Math. 45 (1983) 151-160, and Brouwer-Draisma-Popoviciu, Transform. Groups 20 (2015) 953-967 (binary forms)",
+   "verdict": "partially-known-cited",
+   "verdictNote": "numbers new in the bounded search; the hsop-constraint method is known (Dixmier; Brouwer-Draisma-Popoviciu) and cited"
   }
  ],
  "sourcesReadInFull": [
   {
    "citation": "Derksen, Universal denominators of Hilbert series, J. Algebra 285 (2005)",
-   "usedFor": "Proposition 3 and Section 3",
+   "usedFor": "Proposition 2 and Section 4 (the case used is proved directly in Lemmas 5-7)",
    "readWhat": "full text (literature agent); Def. 1.9, Thm 1.10, Lemma 2.2, Prop 3.3, Thm 3.4, Thm 5.1 re-read by the producer"
   },
   {
@@ -114,8 +125,13 @@
   },
   {
    "citation": "Bedratyuk, arXiv 0806.1920 and 0811.0256",
-   "usedFor": "septic coefficients to t^21; general formulas",
+   "usedFor": "septic coefficients to t^21 (arXiv 0806.1920); general formulas",
    "readWhat": "full text"
+  },
+  {
+   "citation": "Benanti, Boumova, Drensky, Genov, Koev, Serdica Math. J. 38 (2012) / arXiv 1201.4448",
+   "usedFor": "survey of the ternary frontier; reports Bedratyuk's range (degree <= 30 for m <= 7)",
+   "readWhat": "Section on ternary forms and references (arXiv PDF)"
   }
  ],
  "limitationTriage": [
@@ -150,19 +166,19 @@
    "whyNotClosedNow": ""
   },
   {
-   "limitation": "Torus bounds exceed the truth by 2 at a few small orders",
-   "closingQuestion": "Would larger centralisers in Derksen's Thm 3.4 give exact multiplicities?",
-   "triedOrSearched": "pattern observed for d = 5..9",
-   "estimatedCost": "a proof and a new enumeration, several hours",
+   "limitation": "Pole bounds exceed the truth by exactly 2 at a few small orders",
+   "closingQuestion": "Does the centraliser Z_G(t) (Derksen Prop. 3.3 / proof of Thm 3.4) explain the excess (editorial gate DOM-3)?",
+   "triedOrSearched": "implemented and tested (scripts/centraliser_bounds.py, paper Remark 9): valid for d = 5..9, never below the true multiplicities; removes the excess only at r = 2 for d = 5, 7, 8. The remaining maxima come from level sets of regular torus elements (centraliser T).",
+   "estimatedCost": "about 1 h (done); a full explanation is not known",
    "cheap": false,
    "decision": "OPEN",
-   "reasonOpen": "not needed for the theorems; relevant only to d >= 10",
-   "whyNotClosedNow": ""
+   "reasonOpen": "centralisers explain only r = 2; the rest needs a new idea",
+   "whyNotClosedNow": "the cheap route was tried and recorded as a partial negative result"
   },
   {
-   "limitation": "Knop's and Formanek's originals not read (used via Makam's and Berele's restatements)",
+   "limitation": "Knop's original not read (used via Makam's restatement)",
    "closingQuestion": "Can the originals be obtained quickly?",
-   "triedOrSearched": "Crossref DOIs confirmed (Knop 1986 doi:10.1007/BF01168503; Formanek 1986 doi:10.2307/2000206); full texts are publisher-hosted and were not obtained in this session",
+   "triedOrSearched": "Crossref DOI confirmed (Knop 1986 doi:10.1007/BF01168503); publisher-hosted full text not obtained. Makam Thm 3.3 and Herbig-Schwarz Thm 3.7 checked against the arXiv texts (no exceptions in HS 3.7).",
    "estimatedCost": "unknown (access)",
    "cheap": false,
    "decision": "OPEN",
@@ -180,10 +196,10 @@
    "whyNotClosedNow": ""
   },
   {
-   "limitation": "Octic/nonic grid coefficients from one engine",
+   "limitation": "Octic/nonic coefficients from one algorithm",
    "closingQuestion": "Can an independent method check them cheaply?",
-   "triedOrSearched": "independent weight counting (methodAd) modulo two 16-bit primes to degrees 450/400; out-of-sample prediction mod a 31-bit prime to 1600/1000",
-   "estimatedCost": "minutes",
+   "triedOrSearched": "second algorithm (weight counting, methodAd2.c packed storage) run at 17 (d=8) and 18 (d=9) sixteen-bit primes over the whole determining ranges; CRT-lifted integers equal the grid engine's for every n <= 1194 / 690 (scripts/wc_exact.py)",
+   "estimatedCost": "about 40 min laptop (done)",
    "cheap": true,
    "decision": "CLOSED",
    "reasonOpen": "",
@@ -208,6 +224,26 @@
    "decision": "CLOSED",
    "reasonOpen": "",
    "whyNotClosedNow": ""
+  },
+  {
+   "limitation": "Editorial gate METH-2: the certificate's internal checks cannot detect an undersized denominator bound",
+   "closingQuestion": "Make the out-of-sample prediction part of the pass/fail and add undersized-B negative controls?",
+   "triedOrSearched": "done: certify_ternary.py requires --predict; two undersized-B controls are rejected by the prediction alone",
+   "estimatedCost": "about 30 min",
+   "cheap": true,
+   "decision": "CLOSED",
+   "reasonOpen": "",
+   "whyNotClosedNow": ""
+  },
+  {
+   "limitation": "Editorial gate DOM-2/DA-6: hsop degree-sum minima rest on an unjustified degree cap and a floating-point solver",
+   "closingQuestion": "Justify the cap; certify or relabel?",
+   "triedOrSearched": "cap set to S - (delta-1) k_min (1266, 2283, 1273); optima unchanged; solutions checked exactly; minima labelled solver-computed",
+   "estimatedCost": "about 20 min; an exact optimality certificate would take longer",
+   "cheap": true,
+   "decision": "CLOSED",
+   "reasonOpen": "",
+   "whyNotClosedNow": "exact optimality certificate not attempted; the numbers are labelled solver-computed"
   }
  ],
  "extensionScout": {
@@ -225,7 +261,8 @@
    "done: H_9 determined",
    "sized: d = 10 about 100 CPU-hours, d = 11 about 800 (left open)",
    "done: exact agreement with Bedratyuk-Xin",
-   "done: identical for d = 5..9"
+   "done: identical for d = 5..9",
+   "done after the editorial gate: second-algorithm exact agreement for d = 8, 9; sharper generator counts (common-factor rule, Hopf bound); centraliser refinement tested (partial)"
   ]
  }
 }
