@@ -15,21 +15,34 @@
 \newtheorem{remark}[theorem]{Remark}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}}
 \newcommand{\SL}{\mathrm{SL}}
+\newcommand{\CT}{\operatorname{CT}}
 \newcommand{\udenom}{\operatorname{udenom}}
-\input{octic_macros.tex}
 
 \title[Hilbert series of ternary septic, octic and nonic invariants]{The Hilbert series of the invariants of ternary septics, octics and nonics}
 \author{Anonymous}
-\date{Version 0.2.0-candidate, 26 September 2026. Unrefereed candidate. Follow-up to version 0.1.0-candidate, doi:\href{https://doi.org/10.5281/zenodo.22974308}{10.5281/zenodo.22974308}.}
+\date{Version 0.2.0-candidate, 26 September 2026. Unrefereed candidate. doi:\href{https://doi.org/10.5281/zenodo.22978726}{10.5281/zenodo.22978726}. Follow-up to version 0.1.0-candidate, doi:\href{https://doi.org/10.5281/zenodo.22974308}{10.5281/zenodo.22974308}.}
 
 \begin{document}
 
 \begin{abstract}
-We determine the Hilbert series of the rings of $\SL_3(\C)$-invariants of ternary forms of degrees $7$, $8$ and $9$. Within the literature we found, the largest degree previously completed was $6$ (Bedratyuk--Xin, 2011). The septic series equals the candidate $R_7(t)$ of version~0.1.0 of this work, where it was proved only through degree $760$ and conditionally beyond. The least denominator of $R_7$ has degree $1386$. \OCTICABSTRACT
+We determine the Hilbert series of the rings of $\SL_3(\C)$-invariants of ternary forms of degrees $7$, $8$ and $9$. Within the literature we found, the largest degree previously completed was $6$ (Bedratyuk--Xin, 2011).
+\begin{itemize}
+\item The septic series equals the candidate $R_7$ of version~0.1.0 of this work, where it was proved only through degree $760$ and conditionally beyond. Its least denominator has degree $1386$.
+\item The octic series has a least denominator of degree $2331$ and a palindromic numerator of degree $2286$.
+\item The nonic series has a least denominator of degree $1393$ and a palindromic numerator of degree $1338$.
+\end{itemize}
 
-The method is not new. Derksen's universal denominators bound the pole orders of the Hilbert series at roots of unity by fixed-point dimensions, computable from the torus weights. The functional equation fixes the degree of the numerator (Knop; Stanley). Finitely many exactly computed coefficients then determine the series, as in Makam's work on matrix semi-invariants. Our contribution is the application to ternary forms. We compute the torus bounds for $d=7,8,9$ by an exhaustive enumeration, which a separate program reproduces blind. We also compute the required coefficients exactly: for septics, the degree-$760$ data already suffice. The same pipeline re-derives the known series for $d=5,6$ exactly.
-
+The method is known. Derksen's universal denominators bound the poles of the series by torus data, the functional equation fixes the degree of the numerator, and finitely many exact coefficients then determine the series, as in Makam's work on matrix semi-invariants. Our contributions are:
+\begin{itemize}
+\item the exhaustive torus-bound computations for $d=7,8,9$, reproduced by a separately written program;
+\item correctness statements for the two coefficient engines;
+\item the exact coefficients, with archived per-prime residues;
+\item certificates, validated by re-deriving the known series for $d=5,6$;
+\item structural consequences: exact numbers of minimal generators in low degrees, and constraints on the degrees of any homogeneous system of parameters.
+\end{itemize}
 This version also corrects two attribution omissions in version~0.1.0.
 \end{abstract}
 
@@ -37,129 +50,274 @@ This version also corrects two attribution omissions in version~0.1.0.
 
 \section{Introduction}
 
-Let $I_{3,d}=\C[S^d\C^3]^{\SL_3}$ be the ring of invariants of ternary forms of degree $d$, graded by degree, and let $H_d(t)=\sum_n\dim(I_{3,d})_nt^n$. The series is classical for $d\le4$ (see~\cite{BX}). Bedratyuk and Xin~\cite{BX} computed $d=5,6$ by MacMahon partition analysis. For $d=7$, Bedratyuk~\cite{Bed08} gave the coefficients through degree $21$. We found no complete series for any $d\ge7$ (search record in \texttt{PRIOR\_ART.md}; MathSciNet and zbMATH were not searched).
+Let $I_{3,d}=\C[S^d\C^3]^{\SL_3}$ and let $H_d(t)=\sum_n a_nt^n$ be its Hilbert series, graded by degree.
+\begin{itemize}
+\item The series is classical for $d\le4$; see~\cite{BX} and, for the history and methods up to 1991, Broer~\cite{Broer}.
+\item Bedratyuk and Xin~\cite{BX} computed $d=5,6$ by MacMahon partition analysis.
+\item For $d=7$, Bedratyuk~\cite{Bed08} gave the coefficients through degree $21$.
+\end{itemize}
+We found no complete series for any $d\ge7$. The search record is in \texttt{PRIOR\_ART.md}; MathSciNet and zbMATH were not searched.
 
-Version~0.1.0 of this work~\cite{V01} gave a rational function $R_7$ and proved $H_7=R_7$ through degree $760$. Full equality was proved only under a hypothesis on a homogeneous system of parameters, whose existence was unknown.
+Version~0.1.0~\cite{V01} gave a rational function $R_7$ and proved $H_7=R_7$ through degree $760$. Full equality was proved only under an unverified hypothesis on a homogeneous system of parameters (hsop).
 
-\begin{theorem}[plane septics; computer-assisted]\label{thm:sept}
-$H_7(t)=R_7(t)$. The least denominator of $H_7$ is $\prod_r\Phi_r^{m_r}$, a product of cyclotomic polynomials of degree $1386$ with the multiplicities of Table~\ref{tab:sept}. The numerator in lowest terms is palindromic of degree $1350$.
-\end{theorem}
-
-\begin{theorem}[octics and nonics; computer-assisted]\label{thm:oct}
-\OCTICTHEOREM
+\begin{theorem}[computer-assisted]\label{thm:main}
+\begin{enumerate}
+\item $H_7=R_7$. The least denominator of $H_7$ is a product of cyclotomic polynomials of degree $1386$ (Table~\ref{tab:mult}), and the numerator is palindromic of degree $1350$.
+\item $H_8=N_8/D_8$, where $\deg D_8=2331$, and $N_8$ is palindromic of degree $2286$.
+\item $H_9=N_9/D_9$, where $\deg D_9=1393$, and $N_9$ is palindromic of degree $1338$.
+\end{enumerate}
+The polynomials are in \texttt{data/*/d\{7,8,9\}\_rational.json}. The first terms are:
+\[
+H_8=1+t^3+6t^6+81t^9+1990t^{12}+46543t^{15}+\cdots,\qquad
+H_9=1+t^4+6t^6+3t^7+46t^8+118t^9+612t^{10}+\cdots.
+\]
 \end{theorem}
 
 \subsection*{Method and what is new}
-The route to both theorems has four steps, and each is known.
-\begin{enumerate}
-\item \emph{Pole orders from fixed points.} Derksen~\cite{Der05} defines the universal denominator $\udenom(M,t)$ of a graded module $M$, the least common multiple of the denominators of the Hilbert series of all submodules. He proves that $\udenom(M,t)=\prod_r\Phi_r^{m_r}$ with $m_r=\dim M/I^{[r]}M$, where $I^{[r]}$ is generated by the homogeneous elements whose degree is not divisible by $r$~\cite[Thm.~1.10]{Der05}.
-\item \emph{Reduction to the torus.} For $G$ connected reductive and $T$ a maximal torus, $\udenom(S^G)$ divides $\udenom(S^T)$~\cite[Thm.~3.4]{Der05}. The torus version is explicit: it is a maximum of $\#I-\operatorname{rank}\Omega_I$ over weight subsets $I$ satisfying a lattice condition~\cite[Thm.~5.1]{Der05}.
-\item \emph{Functional equation.} The rings are Gorenstein with $\deg H_d=-\dim V$ (Knop's criterion, as used in~\cite{V01}). So $H_d\cdot B$ is a palindromic polynomial of known degree for every denominator $B$.
-\item \emph{Finite determination.} Half the coefficients of that polynomial then determine $H_d$. Makam used exactly this combination of universal denominators, Knop's theorem and the functional equation for matrix semi-invariants~\cite[\S\S3,6]{Mak16}.
-\end{enumerate}
-Our contributions are:
+Each ingredient of the method is known.
 \begin{itemize}
-\item the exhaustive computation of the torus bounds for $S^d\C^3$ with $d=7,8,9$, reproduced by an independently written program;
-\item the observation that for $d=7$ these bounds are within $2$ of the true multiplicities at every order, so that the exact data of~\cite{V01} already suffice;
-\item the exact coefficients for $d=8,9$;
-\item the certificates.
+\item Derksen~\cite{Der05} proves that the universal denominator of a graded module $M$ is $\prod_r\Phi_r^{m_r}$ with $m_r=\dim M/I^{[r]}M$~\cite[Thm.~1.10]{Der05}, where $I^{[r]}$ is generated by the homogeneous elements whose degree is not divisible by $r$. The universal denominator is the least common multiple of the denominators of all submodules.
+\item Derksen also proves that for connected reductive $G$ with maximal torus $T$, $\udenom(S^G)$ divides $\udenom(S^T)$~\cite[Thm.~3.4]{Der05}, and gives $\udenom(S^T)$ combinatorially~\cite[Thm.~5.1]{Der05}.
+\item Knop's criterion fixes the degree of $H_d$, and the rings are Gorenstein. Hence $H_d\cdot B$ satisfies a signed reciprocity for the denominators $B$ used below.
+\item Consequently half the coefficients determine the series. Makam used this combination for matrix semi-invariants~\cite[\S\S3,6]{Mak16}.
+\end{itemize}
+Our contributions are the new cases and what makes them auditable:
+\begin{itemize}
+\item exhaustive torus-bound computations (\S\ref{sec:torus}), reproduced by a separately written program;
+\item correctness statements for the coefficient engines (\S\ref{sec:coef});
+\item the exact data, with archived per-prime residues;
+\item the certificates;
+\item the consequences in \S\ref{sec:cons}.
 \end{itemize}
 
 \subsection*{Corrections to version~0.1.0}
-Version~0.1.0~\cite{V01} is immutable. We record two attribution omissions here. Neither affects any stated result.
+Version~0.1.0 is immutable; we record two attribution omissions here. Neither affects any stated result.
 \begin{enumerate}
-\item Its \S7 describes an a~priori denominator for $H_7$, obtained from extreme rays of the weight cone, as available ``by standard means'', without citing Derksen~\cite{Der05}, which gives a sharper version.
-\item It presents the combination of a denominator theorem, the functional equation and finitely many exact coefficients as part of its methodological contribution. The same strategy appears in Makam~\cite[\S6]{Mak16}, which~\cite{V01} cites only for Knop's criterion. The contribution of~\cite{V01} is the new cases, the implementation and the certificates.
+\item Its \S7 describes an a priori denominator for $H_7$ as available ``by standard means'', without citing Derksen~\cite{Der05}, who gives the sharper theory used here.
+\item It presents the combination of a denominator theorem, the functional equation and finitely many exact coefficients as part of its methodological contribution. This is Makam's strategy~\cite[\S6]{Mak16}, which~\cite{V01} cites only for Knop's criterion.
 \end{enumerate}
 
-\section{The certificate}\label{sec:cert}
+\section{The finite-determination certificate}\label{sec:cert}
 
-Let $G=\SL_3$, $V=S^d\C^3$, $A=\C[V]^G$ and $\delta=\dim V-8$, the Krull dimension. Write $H=H_d=\sum a_nt^n$.
+Let $G=\SL_3$, $V=S^d\C^3$, $A=\C[V]^G$ and $\delta=\dim V-8$, the Krull dimension. We use:
+\begin{itemize}
+\item $\dim V=36,45,55$ and $\delta=28,37,47$ for $d=7,8,9$.
+\item $A$ is Cohen--Macaulay~\cite{HR}. It is factorial because $\SL_3$ has no nontrivial characters, and hence Gorenstein~\cite{Murthy}.
+\item $S^d\C^3$ is not coregular for $d\ge4$~\cite{Sch78}. Being an irreducible module of a connected simple group, it is therefore $2$-large~\cite[Thm.~3.7]{HS}.
+\item Knop's criterion~\cite{Knop}, as stated in~\cite[Thm.~3.3]{Mak16}, gives $\deg H=-\dim V$.
+\item Stanley's theorem~\cite{Stanley} then gives $H(1/t)=(-1)^\delta t^{\dim V}H(t)$.
+\end{itemize}
 
 \begin{proposition}\label{prop:cert}
-Let $T\subset G$ be the diagonal torus. Write $\udenom(\C[V]^T,t)=\prod_r\Phi_r^{b_r}$, and let $B=\prod_r\Phi_r^{p_r}$ with $p_r=\min(\delta,b_r)$. Then $P=H\cdot B$ is a polynomial with $P(t)=\varepsilon\,t^KP(1/t)$, where $K=\deg B-\dim V$ and $\varepsilon=(-1)^{\delta}\cdot(-1)^{p_1}$. Consequently $H$ is determined by $a_0,\dots,a_{\lfloor K/2\rfloor}$.
+Let $T\subset G$ be the diagonal torus, write $\udenom(\C[V]^T,t)=\prod_r\Phi_r^{b_r}$, and let $B=\prod_r\Phi_r^{p_r}$ with $p_r=\min(\delta,b_r)$. Then $P=H\cdot B$ is a polynomial satisfying $P(t)=\varepsilon\,t^KP(1/t)$, where $K=\deg B-\dim V$ and $\varepsilon=(-1)^{\delta+p_1}$. Consequently $H$ is determined by $a_0,\dots,a_{\lfloor K/2\rfloor}$.
 \end{proposition}
 \begin{proof}
-By~\cite[Thm.~3.4]{Der05}, $\udenom(A)$ divides $\udenom(\C[V]^T)$. The pole order of $H$ at a primitive $r$-th root of unity is at most the exponent of $\Phi_r$ in $\udenom(A)$, since $A$ is a submodule of itself. So it is at most $b_r$. It is also at most $\delta$: by homogeneous Noether normalisation, $A$ is finite over a polynomial ring in $\delta$ variables. Hence $H\cdot B$ has no finite poles and is a polynomial.
+The pole order of $H$ at a primitive $r$-th root of unity is at most the exponent of $\Phi_r$ in $\udenom(A)$, because $A$ is a submodule of itself. By~\cite[Thm.~3.4]{Der05}, that exponent is at most $b_r$. It is also at most $\delta$: by homogeneous Noether normalisation $A$ is finite over a polynomial ring in $\delta$ variables, so Hilbert--Serre applies.
 
-The functional equation $H(1/t)=(-1)^{\delta}t^{\dim V}H(t)$ (\S\ref{sec:fe}) and $B(1/t)=(-1)^{p_1}t^{-\deg B}B(t)$ give the symmetry. A polynomial of degree at most $K$ with this symmetry is determined by its coefficients of degree at most $\lfloor K/2\rfloor$, and these are those of $H\cdot B$.
+Hence $H\cdot B$ has no finite poles. A rational function with no finite poles is a polynomial. The signed reciprocity follows from the functional equation together with $B(1/t)=(-1)^{p_1}t^{-\deg B}B(t)$. A polynomial of degree at most $K$ with this symmetry is determined by its coefficients of degree at most $\lfloor K/2\rfloor$.
 \end{proof}
 
-\subsection{The functional equation}\label{sec:fe}
-The argument of~\cite[\S3.1]{V01} applies to every $d\ge5$.
-\begin{itemize}
-\item $A$ is Cohen--Macaulay~\cite{HR}. It is factorial because $\SL_3$ has no nontrivial characters, and hence Gorenstein~\cite{Murthy}.
-\item $S^d\C^3$ is not coregular for $d\ge4$~\cite{Sch78}, so it is $2$-large~\cite[Thm.~3.7]{HS}.
-\item Knop's criterion, as stated in~\cite[Thm.~3.3]{Makam}, then gives $\deg H=-\dim V$.
-\end{itemize}
-Stanley's theorem~\cite{Stanley} gives $H(1/t)=(-1)^\delta t^{\dim V}H(t)$. For $d=7$: $\dim V=36$ and $\delta=28$. For $d=8$: $\dim V=45$ and $\delta=37$. For $d=9$: $\dim V=55$ and $\delta=47$.
-
-\section{The torus bounds}\label{sec:torus}
-
-The torus weights of $S^d\C^3$ are $w=(a-c,b-c)$ for $a+b+c=d$. By~\cite[Thm.~5.1]{Der05} and the proof of~\cite[Thm.~3.4]{Der05}, $b_r$ is the largest dimension of a torus quotient $V_S/\!/T$. Here $S=\{w:\chi_w(t)=\zeta\}$ is the set of weights on which some torus element $t$ acts by a primitive $r$-th root of unity $\zeta$, and
-\[
-\dim V_S/\!/T=|S_0|-\operatorname{rank}S_0,\qquad S_0=\{w\in S:-w\in\operatorname{cone}(S)\}.
-\]
-We enumerate every such level set exactly. Write $S=W\cap\phi^{-1}(\zeta)$ for a homomorphism $\phi:\Z^2\to\C^*$.
-\begin{itemize}
-\item If the differences of $S$ span a rank-$2$ lattice, then $\ker\phi$ has cyclic quotient of order at most the largest $|\det|$ of two weight differences ($147$, $192$ and $243$ for $d=7,8,9$). All such kernels are enumerated.
-\item If $S$ lies on a line, then $\dim V_S/\!/T=0$ unless the line passes through $0$. In that case $S$ lies in a residue class of multiples of a primitive direction, and these are enumerated up to the diameter of the line.
-\item Singletons contribute $0$.
-\end{itemize}
-The program is \texttt{scripts/pole\_bounds.py}. A second program, written blind by a separate agent from the definition alone, enumerates the lattice condition of~\cite[Thm.~5.1]{Der05} directly. It gives identical values of $b_r$ for $d=5,\dots,9$, and for $d\le7$ it found an explicit torsion witness for every value. For the known cases $d=5,6$, the bounds are at least the true multiplicities of the least denominator everywhere, and positive exactly on its pole set.
+For $d=7,8,9$ the sign is $\varepsilon=+1$. Table~\ref{tab:sizes} gives the sizes involved.
 
 \begin{table}[h]\small
-\caption{Plane septics: the bound $p_r=\min(28,b_r)$ and the multiplicity $m_r$ of $\Phi_r$ in the least denominator of $H_7$, as $p_r/m_r$. For all other $r$, $p_r=m_r=0$.}\label{tab:sept}
-\begin{tabular}{@{}p{0.95\textwidth}@{}}
+\caption{Certificate sizes. ``Needed'' is $\lfloor K/2\rfloor$; ``exact data'' is the range of the archived exact coefficients; ``modulus'' is the product of the distinct primes, compared with $2\binom{n+\dim V-1}{\dim V-1}$ at $n=\lfloor K/2\rfloor$, which bounds $2a_n$.}\label{tab:sizes}
+\begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-1:28/28, 2:18/16, 3:28/28, 4:10/8, 5:9/7, 6:18/16, 7:3/3, 8:4/4, 9:13/11, 10:4/4, 11:2/2, 12:10/8, 13:2/2, 14:1/1, 15:9/7, 16:1/1, 17:1/1, 18:8/6, 19:1/1, 20:1/1, 21:3/3, 22:1/1, 23:1/1, 24:4/4, 25:1/1, 26:1/1, 27:3/3, 29:1/1, 30:4/4, 33:2/2, 36:3/3, 39:2/2, 42:1/1, 45:2/2, 48:1/1, 51:1/1, 54:2/2, 57--78 in steps of 3: 1/1 each, 87:1/1, 90:1/1, 108:1/1.\\
+$d$ & $\deg B$ & $K$ & needed & exact data & modulus (bits) & $2\times$bound (bits)\\
+\midrule
+7 & 1452 & 1416 & 708 & 0--760 (weight counting) & 240 & 201\\
+8 & 2433 & 2388 & 1194 & 0--1194 (grid) & 372 & 272\\
+9 & 1427 & 1372 & 686 & 0--690 (grid) & 372 & 276\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\section{Plane septics: proof of Theorem~\ref{thm:sept}}
+\section{Exact coefficients}\label{sec:coef}
 
-For $d=7$ the bound $B=\prod\Phi_r^{p_r}$ has degree $1452$, so $K=1416$ and $\varepsilon=+1$. By Proposition~\ref{prop:cert}, $H_7$ is determined by $a_0,\dots,a_{708}$. These are known as exact integers for $n\le760$~\cite{V01}. They come from a weight-counting computation modulo $15$ distinct $16$-bit primes, which the package regenerates from scratch in about three minutes.
+Two independent algorithms compute $a_n\bmod p$; the Chinese remainder theorem then gives the integers. Throughout, $W=\{(a-c,b-c):a+b+c=d\}\subset\Z^2$ is the set of torus weights of $V$, one for each monomial $x^ay^bz^c$.
 
-The script \texttt{certify\_septic\_unconditional.py} checks, in exact integer arithmetic, that:
+\begin{proposition}[grid engine; \texttt{scripts/mw5.c}, \texttt{mw6.c}]\label{prop:grid}
+Let $L\ge0$ and $M>dL+4$. Let $p$ be a prime with $M\mid p-1$, and let $\omega\in\F_p$ have exact order $M$. For $(i,j)\in(\Z/M)^2$ set $e_3=-i-j$, $E=(i,j,e_3)$, and
+\[
+w(i,j)=\prod_{a\ne b}(1-\omega^{E_a-E_b}),\qquad F_{i,j}(t)=\prod_{(u,v)\in W}\bigl(1-\omega^{ui+vj}t\bigr)^{-1}\in\F_p[[t]].
+\]
+Then for every $n\le L$,
+\[
+a_n\equiv M^{-2}\sum_{\substack{0\le i<j<e_3<M\\ i+j+e_3\equiv0}}w(i,j)\,[t^n]F_{i,j}(t)\pmod p.
+\]
+\end{proposition}
+\begin{proof}
+By the Weyl integration formula, $H(t)=\frac16\CT_{z}\bigl[\prod_{\alpha}(1-z^\alpha)\prod_{w\in W}(1-tz^w)^{-1}\bigr]$. Here $z=(z_1,z_2)$, $z_3=(z_1z_2)^{-1}$, the product over $\alpha$ runs over the six roots $z_a/z_b$, and $\CT$ takes the constant term of each $t$-coefficient.
+\begin{enumerate}
+\item \emph{Exponent bound.} The coefficient of $t^n$ is an integer Laurent polynomial whose exponents have absolute value at most $dn+4$: the weights contribute at most $dn$ and the Weyl numerator at most $4$.
+\item \emph{No aliasing.} For a monomial $z^m$ with $|m_1|,|m_2|<M$, the average $M^{-2}\sum_{(i,j)}\omega^{m_1i+m_2j}$ equals $1$ if $m=0$ and $0$ otherwise, since $\omega$ has exact order $M$ and $M$ is invertible mod $p$. So the average over the order-$M$ grid computes the constant term exactly modulo $p$ whenever $M>dL+4$.
+\item \emph{Orbit reduction.} The integrand is invariant under $S_3$ permuting $(E_1,E_2,E_3)$, and it vanishes when two $E_a$ coincide. So the grid sum is $6$ times the sum over representatives $i<j<e_3$, which cancels the factor $\tfrac16$.
+\item \emph{Power series.} The engine builds $F_{i,j}$ one factor at a time using $s_n\leftarrow s_n+x\,s_{n-1}$, which is multiplication by $(1-xt)^{-1}$.
+\end{enumerate}
+\end{proof}
+
+\emph{Code map for \texttt{mw5.c}.}
+\begin{itemize}
+\item Line~24 checks $M\mid p-1$ and $p<2^{62}$. Line~25 enforces $M\ge2(dL+2)+1>dL+4$.
+\item Lines~29--31 choose $\omega$ and verify its exact order $M$ by testing $\omega^{M/q}\ne1$ for every prime $q\mid M$.
+\item Line~51 forms $w(i,j)$. Line~49 selects $i<j<e_3$. Line~56 forms $\omega^{ui+vj}$. Lines~57--58 perform the recurrence.
+\item Line~65 multiplies by $M^{-2}$.
+\item Arithmetic is Montgomery reduction with 128-bit products for $p<2^{62}$. The engine refuses weight sets with more than $64$ elements (line~35), so $d\le9$.
+\item \texttt{mw6.c} is the same algorithm for $p<2^{31}$.
+\end{itemize}
+
+\begin{proposition}[weight counting; \texttt{methodAd.c}, \texttt{methodA16.c}]\label{prop:wc}
+Let $f_n(A,B)$ be the number of multisets of $n$ elements of the multiset of $\mathrm{GL}_3$-weights $\{(a,b,c):a+b+c=d\}$ with sum $(A,B,dn-A-B)$. If $3\nmid dn$ then $a_n=0$. Otherwise, with $k=dn/3$,
+\[
+a_n=f_n(k,k)-f_n(k{-}1,k{+}1)-f_n(k,k{-}1)-f_n(k{-}2,k)+f_n(k{-}1,k{-}1)+f_n(k{-}2,k{+}1).
+\]
+\end{proposition}
+\begin{proof}
+$a_n$ is the multiplicity of $\det^k$ in $S^n(S^dV)$ as a $\mathrm{GL}_3$-module. By the Weyl character formula this multiplicity is $\sum_{w\in S_3}\operatorname{sgn}(w)\,\mathrm{mult}\bigl(w(\lambda+\rho)-\rho\bigr)$, with $\lambda=(k,k,k)$ and $\rho=(2,1,0)$. The six terms are those displayed.
+
+The program computes $f_n$ by one unbounded-knapsack pass per weight, keeping only the coordinates at most $dn/3+2$. This is enough because weights are nonnegative and every target coordinate is at most $k+2$. Arithmetic is modulo a prime $p<2^{16}$, which the program checks, with 16-bit storage.
+\end{proof}
+
+\emph{Data.}
+\begin{itemize}
+\item \emph{Septics:} exact $a_n$ for $n\le760$ by Proposition~\ref{prop:wc} at $15$ distinct $16$-bit primes. The archived per-prime outputs are re-lifted on every replay, and \texttt{FULL=1} regenerates them in about three minutes.
+\item \emph{Octics and nonics:} exact $a_n$ by Proposition~\ref{prop:grid} at six distinct $62$-bit primes. For each case the six raw residue arrays are archived, and \texttt{certify\_ternary.py} re-lifts them itself. It checks every congruence, the array lengths, the metadata and the bound, and compares with the frozen output before writing anything.
+\item The two algorithms share no code and no mathematics beyond the definition of $a_n$. They agree modulo two $16$-bit primes for $n\le450$ ($d=8$) and $n\le400$ ($d=9$).
+\end{itemize}
+
+\section{The torus bounds}\label{sec:torus}
+
+By~\cite[Thm.~3.4 and its proof]{Der05} and~\cite[Thm.~5.1]{Der05}, $b_r$ is the largest dimension of $V_S/\!/T$, where:
+\begin{itemize}
+\item $S=S(t,\zeta)=\{w\in W:\chi_w(t)=\zeta\}$ is the set of weights on which some $t\in T$ acts by some primitive $r$-th root of unity $\zeta$;
+\item $V_S$ is the span of the corresponding monomials.
+\end{itemize}
+For finite $S\subset\Z^2$ put $\kappa(S)=\dim V_S/\!/T$.
+
+\begin{lemma}\label{lem:kappa}
+$\kappa(S)=|S_0|-\operatorname{rank}S_0$, where $S_0=\{w\in S:-w\in\operatorname{cone}(S)\}$. In particular:
+\begin{itemize}
+\item $\kappa$ is monotone under inclusion;
+\item $\kappa(S)=0$ if $S$ lies in an open half-plane through $0$ (for example, on an affine line not through $0$);
+\item $\kappa(\{0\})=1$, and $\kappa(\{w\})=0$ for $w\neq0$.
+\end{itemize}
+\end{lemma}
+\begin{proof}
+$\C[V_S]^T$ is the monoid algebra of the nonnegative integer relations $\sum c_ww=0$, so its dimension is that of the relation cone. That cone lies in $\R^{S_0}$ and contains a relation that is strictly positive on $S_0$. So it has the dimension of $\ker(\R^{S_0}\to\R^2)$, which is $|S_0|-\operatorname{rank}S_0$. The remaining statements follow directly.
+\end{proof}
+
+\begin{lemma}[exhaustive enumeration]\label{lem:enum}
+Every level set $S=W\cap\phi^{-1}(\zeta)$ of a homomorphism $\phi:\Z^2\to\C^*$ at a root of unity $\zeta$ of exact order $r$ is contained in one of the following sets, with the same $r$:
+\begin{enumerate}
+\item[(i)] \emph{Rank two.} If the differences of $S$ span a rank-$2$ lattice, then $S=W\cap(w_0+\Lambda)$, where $\Lambda=\ker\phi$ is the kernel of $(x,y)\mapsto cx+ey\bmod N$ for some $N$ at most the largest $|\det|$ of two weight differences ($147$, $192$, $243$ for $d=7,8,9$). One may take $c\mid N$. Here $r$ is the order of $w_0$ in $\Z^2/\Lambda\cong\Z/N$.
+\item[(ii)] \emph{Rank one.} If $S$ lies on a line through $0$ with primitive direction $u$, then $S\subseteq\{ku:k\equiv\rho\ (\mathrm{mod}\ m)\}$ for some $m$ at most the diameter of the line's weight set, with $r=m/\gcd(m,\rho)$. If $S$ lies on a line not through $0$, then $\kappa(S)=0$.
+\item[(iii)] \emph{One element.} If $S=\{w\}$, then $\kappa=0$ for $w\neq0$. For the zero weight, which occurs when $3\mid d$, $S=\{0\}$ has $\kappa=1$ and $\zeta=\phi(0)=1$, so $r=1$.
+\end{enumerate}
+Consequently $b_r=\max\kappa$ over the finitely many sets listed. For every $r$ not attained with $\kappa>0$, $b_r=0$.
+\end{lemma}
+\begin{proof}
+\begin{enumerate}
+\item[(i)] $\ker\phi$ contains the rank-$2$ lattice of differences, so its index divides that lattice's index. It is therefore at most the $|\det|$ of any two independent differences. $\Z^2/\ker\phi$ embeds in $\C^*$, so it is finite cyclic and $\phi$ induces an isomorphism onto $\mu_N$. A primitive map $(a,b)$ can be multiplied by a unit $k$ with $ka\equiv\gcd(a,N)$, which gives the normal form $c\mid N$.
+\item[(ii)] Points $ku$ lie in $S$ exactly when $\phi(u)^k=\zeta$. If $\phi(u)$ has infinite order, then $|S|\le1$. If it has order $m$, the condition is a congruence class, and classes of size at least $2$ require $m$ to be at most the diameter. On an affine line not through $0$ a linear form is positive, so $\kappa=0$ by Lemma~\ref{lem:kappa}.
+\item[(iii)] This is Lemma~\ref{lem:kappa} together with $\phi(0)=1$.
+\end{enumerate}
+Monotonicity of $\kappa$ gives the conclusion.
+\end{proof}
+
+\texttt{scripts/pole\_bounds.py} implements Lemma~\ref{lem:enum}. A second program, written blind by a separate agent (\texttt{independent/blind\_torus\_bounds/}), evaluates the lattice condition of~\cite[Thm.~5.1]{Der05} directly. It maximises $\kappa(S)$ over subsets $S=W\cap(w_0+L)$ with $r\mid o(S)$, where $o(S)$ is the order of $(0,1)$ modulo the lattice generated by the $(w,1)$, $w\in S$. The two programs give identical $b_r$ for $d=5,\dots,9$. For the known cases $d=5,6$, $b_r$ is at least the true multiplicity everywhere and positive exactly on the true pole set.
+
+\section{The three series}\label{sec:proofs}
+
+\emph{Septics.} For $d=7$, Proposition~\ref{prop:cert} requires $a_0,\dots,a_{708}$, which are exact. The script \texttt{certify\_septic\_unconditional.py} regenerates the bounds and checks three things in exact arithmetic:
 \begin{itemize}
 \item the least denominator $D_7$ of $R_7$ divides $B$;
 \item $Q=R_7B$ is a polynomial of degree at most $1416$ with $Q(t)=t^{1416}Q(1/t)$;
-\item the series of $R_7$ equals the exact $a_n$ for every $n\le708$.
+\item the series of $R_7$ equals the exact $a_n$ for $n\le708$.
 \end{itemize}
-The script regenerates the torus bounds itself. Hence $H_7B$ and $Q$ are reciprocal polynomials of degree $1416$ that agree in their lower halves, so they are equal, and $H_7=R_7$.
+So $H_7B=Q$, and $H_7=R_7$.
 
-The bound exceeds the true multiplicity only at $r\in\{2,4,5,6,9,12,15,18\}$, and by exactly $2$ each time. The same pattern occurs for $d=5,6$. Presumably the bound becomes exact if centralisers larger than $T$ are used in the proof of~\cite[Thm.~3.4]{Der05}; we do not need this.
+\emph{Octics and nonics.} No candidate is needed. The script \texttt{certify\_ternary.py} proceeds as follows:
+\begin{enumerate}
+\item it re-lifts the archived residues;
+\item it forms the lower half of $P=H\cdot B$ and completes it by reciprocity;
+\item it reduces $P/B$ to lowest terms;
+\item it checks that the pole order at $t=1$ equals $\delta$.
+\end{enumerate}
+The octic determination uses $a_n$ for $n\le1194$. The nonic determination uses $n\le686$ of the archived range $0$--$690$.
 
-\section{Octics and nonics: proof of Theorem~\ref{thm:oct}}\label{sec:oct}
-\OCTICSECTION
-
-\section{Verification}
-Table~\ref{tab:checks} lists the checks. `Exact' means integer equality; `mod $p$' means agreement modulo a prime, which is evidence, not proof.
+Three kinds of check lie outside the determinations:
+\begin{itemize}
+\item predictions modulo fresh $31$-bit primes up to degree $1600$ ($d=8$) and $1000$ ($d=9$);
+\item the weight-counting agreement stated in \S\ref{sec:coef};
+\item re-derivation by the same pipeline of Bedratyuk and Xin's $H_5$ and $H_6$ from fresh grid data, which reproduces their rational functions exactly.
+\end{itemize}
 
 \begin{table}[h]\small
-\caption{Checks. ``Exact'' means integer equality; ``mod $p$'' means agreement modulo the stated prime(s).}\label{tab:checks}
+\caption{Multiplicities $m_r$ of $\Phi_r$ in the least denominators ($r{:}m_r$; others $0$). An asterisk marks orders where the torus bound $\min(\delta,b_r)$ exceeds $m_r$; it always exceeds it by exactly $2$.}\label{tab:mult}
+\begin{tabular}{@{}p{0.07\textwidth}p{0.87\textwidth}@{}}
+\toprule
+$d=7$ & 1:28, 2:16*, 3:28, 4:8*, 5:7*, 6:16*, 7:3, 8:4, 9:11*, 10:4, 11:2, 12:8*, 13:2, 14:1, 15:7*, 16:1, 17:1, 18:6*, 19:1, 20:1, 21:3, 22:1, 23:1, 24:4, 25:1, 26:1, 27:3, 29:1, 30:4, 33:2, 36:3, 39:2, 42:1, 45:2, 48:1, 51:1, 54:2, 57, 60, \dots, 78 (step 3):1, 87:1, 90:1, 108:1\\[3pt]
+$d=8$ & 1:37, 2:16*, 3:37, 4:8*, 5:9*, 6:16*, 7:7*, 8:4, 9:14*, 10:4, 11:2, 12:8*, 13:2, 14:3, 15:9*, 16:1, 17:2, 18:6*, 19:1, 20:1, 21:7*, 22:1, 23:1, 24:4, 25:1, 26:1, 27:4, 28:1, 29:1, 30:4, 31:1, 33:2, 35:1, 36:3, 37:1, 39:2, 41:1, 42:3, 45:3, 48:1, 49:1, 51:2, 54:2, 57:1, 60:1, 63:2, 66:1, 69:1, 72:1, 75:1, 78:1, 81:1, 84:1, 87:1, 90:1, 93:1, 105:1, 108:1, 111:1, 123:1, 126:1, 147:1\\[3pt]
+$d=9$ & 1:47, 2:26*, 3:16, 4:14*, 5:11*, 6:8, 7:9*, 8:8*, 9:4, 10:6, 11:3, 12:4, 13:3, 14:5, 15:3, 16:4, 17:2, 18:2, 19:2, 20:3, 21:2, 22:2, 23:2, 24:2, 25:2, 26:1, 27:1, 28:2, 29:1, 30:1, 31:1, 32:2, 33:1, 34:1, 35:1, 36:1, 37:1, 38:1, 40:1, 41:1, 42:1, 43:1, 44:1, 46:1, 47:1, 48:1, 49:1, 50:1, 55:1, 56:1, 64:1\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{What the series determine}\label{sec:cons}
+
+The series constrain the structure of the invariant rings. The following statements are consequences of Theorem~\ref{thm:main} alone. The script \texttt{scripts/consequences.py} computes them, and the output is in \texttt{data/consequences.json}.
+
+\emph{Minimal generators in low degree.} Write $g_n=\dim(A_+/A_+^2)_n$ for the number of minimal generators of degree $n$. Then $g_n=a_n-\dim(A_+^2)_n$. The dimension $\dim(A_+^2)_n$ is at most the number $M_n$ of degree-$n$ monomials in the lower-degree generators. When $M_n\le1$ it equals $M_n$, because $A$ is a domain and a product of nonzero elements is nonzero. This gives the following:
+\begin{itemize}
+\item $d=7$: $g_6=3$ and $g_9=13$, while $415\le g_{12}\le420$.
+\item $d=8$: $g_3=1$ and $g_6=5$ (the only decomposable in degree $6$ is the square of the cubic), while $75\le g_9\le80$.
+\item $d=9$: $g_4=1$, $g_6=6$, $g_7=3$, $g_8=45$ and $g_9=118$, while $606\le g_{10}\le611$.
+\end{itemize}
+
+\emph{Systems of parameters.} If $A$ is finite over $\C[f_1,\dots,f_\delta]$ with $\deg f_i=k_i$, then the least denominator divides $\prod_i(1-t^{k_i})$. So for every $r$ at least $m_r$ of the $k_i$ are divisible by $r$. Consequences:
+\begin{itemize}
+\item every hsop of $I_{3,7}$ has a member whose degree is divisible by $108$, one divisible by $90$, one divisible by $87$, and so on;
+\item for $I_{3,8}$ there is a degree divisible by $147$;
+\item for $I_{3,9}$ there is a degree divisible by $64$.
+\end{itemize}
+Minimising $\sum_ik_i$ subject to these constraints, with each $k_i$ a degree in which invariants exist, is an integer program. It gives $\sum_ik_i\ge1428$, $2391$ and $1457$ for $d=7,8,9$. For septics the minimum is attained by the multiset $K$ of~\cite[Thm.~2]{V01}. Whether an hsop with minimal degree sum exists is not determined by the series.
+
+\emph{Secondary invariants.} Let $c_d=\lim_{t\to1}(1-t)^\delta H_d(t)$. Since $A$ is Cohen--Macaulay, it is free over any hsop, and the number of secondary invariants is $c_d\prod_ik_i$. The exact values of $c_d$ are in \texttt{data/consequences.json}; for example $c_7\approx3.3029\cdot10^{-10}$.
+
+\emph{What is not determined.} The series do not determine the generators themselves, the degrees of an actual hsop, the relations beyond the counts implied above, or whether the rings are complete intersections. They do provide exact targets for all such computations.
+
+\section{Verification}
+
+\begin{table}[h]\small
+\caption{Checks. ``Exact'' means integer equality; ``mod $p$'' means agreement modulo the stated prime(s), which is evidence and not an integer certificate.}\label{tab:checks}
 \begin{tabular}{@{}p{0.66\textwidth}p{0.28\textwidth}@{}}
 \toprule
 Check & Result\\
 \midrule
-Torus bounds $b_r$, $d=5,6,7$, recomputed blind by a separate program & identical\\
-Torus bounds versus the known least denominators, $d=5,6$ (Bedratyuk--Xin) & $b_r\ge m_r$ everywhere; same support\\
-Septic certificate (Proposition~\ref{prop:cert}) with exact $a_n$, $n\le708$ & passes\\
-Exact septic $a_n$, $n\le760$, regenerated from $15$ weight-counting runs & exact\\
-\OCTICCHECKROWS
-Adversarial review of the septic argument by a model from another vendor (GPT-5.6), two rounds & round 1 invalid on write-up gaps; round 2 valid with minor gaps, repaired\\
+Torus bounds $b_r$, $d=5,\dots,9$: two separately written programs & identical\\
+Torus bounds versus the known least denominators, $d=5,6$ & $b_r\ge m_r$; same support\\
+Method re-derives Bedratyuk--Xin's $H_5$, $H_6$ from fresh grid data & exact, equal\\
+$H_7$: certificate with exact $a_n$, $n\le708$ (weight counting, $15$ primes) & exact\\
+$H_8$: re-lift of six archived residue arrays; determination; pole order $37$ & exact\\
+$H_9$: re-lift of six archived residue arrays; determination; pole order $47$ & exact\\
+$H_8$, $H_9$: weight counting modulo $65521$, $65519$ ($n\le450$, $400$) & mod $p$, agree\\
+$H_8$, $H_9$: prediction modulo a fresh $31$-bit prime ($n\le1600$, $1000$) & mod $p$, agree\\
 \bottomrule
 \end{tabular}
 \end{table}
 
+\emph{Review record} (provenance, not a mathematical test):
+\begin{itemize}
+\item the septic argument was reviewed adversarially by a model from another vendor (GPT-5.6) in two rounds: round~1 found write-up gaps, and round~2 gave ``valid with minor gaps'', which were repaired;
+\item version~0.2.0 was reviewed by an external model review, whose required revisions are made here (see \texttt{review/}).
+\end{itemize}
+
 \section{Limitations}
 \begin{itemize}
-\item The theorems are computer-assisted. They rest on the cited theorems, on the enumeration programs, and on the correctness of the coefficient computations: for septics, exact weight counting; for octics, \OCTICLIMIT.
-\item No step is formally verified.
-\item Knop's and Formanek's theorems are used through the restatements in~\cite{Makam,Ber}.
-\item All review is model-based.
-\item The next case, $d=10$, needs exact coefficients up to degree $3249$ with the torus bound, roughly $100$ CPU-hours with the present engine. The excess of the torus bound over the truth, always $2$ and at a few small orders, suggests that sharper bounds from larger centralisers would reduce this.
+\item All three theorems are computer-assisted. They rest on the cited theorems, on Propositions~\ref{prop:grid} and~\ref{prop:wc} and their implementations, and on the enumeration of Lemma~\ref{lem:enum}.
+\item For octics and nonics, the determining coefficients come from one algorithm, the grid engine. The second algorithm, weight counting, checks them only modulo primes and to lower degrees.
+\item No step is formally verified. Knop's criterion is used through Makam's statement. All review is model-based.
+\item The next case, $d=10$, has $66$ weights. The present engines accept at most $64$, so it needs an implementation change and renewed checking. With the torus bound it would need exact $a_n$ up to degree $3249$, roughly $100$ CPU-hours with the present algorithm. The recurring excess of exactly $2$ in the torus bounds (Table~\ref{tab:mult}) suggests that sharper bounds, for example from larger centralisers, would reduce this cost.
 \end{itemize}
 
 \section*{Provenance and AI-use statement}
@@ -168,12 +326,12 @@ This work was produced by an AI research agent (Claude, Anthropic) under the dir
 \begin{thebibliography}{99}
 \bibitem{Bed08} L.~Bedratyuk, Analogue of the Sylvester--Cayley formula for invariants of ternary form, \emph{Ukrainian Math. J.} 62 (2010) 1810--1821; arXiv:0806.1920.
 \bibitem{BX} L.~Bedratyuk, G.~Xin, MacMahon partition analysis and the Poincar\'e series of the algebras of invariants of ternary and quaternary forms, \emph{Linear Multilinear Algebra} 59 (2011) 789--799, doi:10.1080/03081087.2010.536763.
-\bibitem{Ber} A.~Berele, Denominators for one variable Poincar\'e series of generic matrices, \emph{J. Algebra} 618 (2023) 195--213; arXiv:2208.06392.
+\bibitem{Broer} B.~Broer, Hilbert series for ternary forms, in: A.~M.~Cohen (ed.), \emph{Computational aspects of Lie group representations and related topics}, CWI Tract 84, CWI, Amsterdam, 1991, 1--18.
 \bibitem{Der05} H.~Derksen, Universal denominators of Hilbert series, \emph{J. Algebra} 285 (2005) 586--607, doi:10.1016/j.jalgebra.2004.10.029.
 \bibitem{HS} H.-C.~Herbig, G.~W.~Schwarz, The Koszul complex of a moment map, arXiv:1205.4608.
 \bibitem{HR} M.~Hochster, J.~L.~Roberts, Rings of invariants of reductive groups acting on regular rings are Cohen--Macaulay, \emph{Adv. Math.} 13 (1974) 115--175.
-\bibitem{Mak16} V.~Makam, Hilbert series and degree bounds for matrix (semi-)invariants, \emph{J. Algebra} 454 (2016) 14--28, doi:10.1016/j.jalgebra.2016.01.032.
-\bibitem{Makam} V.~Makam, arXiv version of~\cite{Mak16}: arXiv:1510.08420.
+\bibitem{Knop} F.~Knop, \"Uber die Glattheit von Quotientenabbildungen, \emph{Manuscripta Math.} 56 (1986) 419--427, doi:10.1007/BF01168503.
+\bibitem{Mak16} V.~Makam, Hilbert series and degree bounds for matrix (semi-)invariants, \emph{J. Algebra} 454 (2016) 14--28, doi:10.1016/j.jalgebra.2016.01.032; arXiv:1510.08420 (theorem numbers refer to the arXiv version).
 \bibitem{Murthy} M.~P.~Murthy, A note on factorial rings, \emph{Arch. Math.} 15 (1964) 418--420.
 \bibitem{Sch78} G.~W.~Schwarz, Representations of simple Lie groups with regular rings of invariants, \emph{Invent. Math.} 49 (1978) 167--191.
 \bibitem{Stanley} R.~P.~Stanley, Hilbert functions of graded algebras, \emph{Adv. Math.} 28 (1978) 57--83.

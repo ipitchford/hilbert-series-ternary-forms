@@ -45,3 +45,14 @@
 **Known cases.** The same pipeline re-derives Bedratyuk–Xin's d = 5 and d = 6 rational functions exactly.
 
 **Blind program.** It reproduces the torus bounds for d = 5–9.
+
+## Residue-archiving rerun (26 September 2026, after the external review of v0.2.0)
+
+**Forecast (recorded before the run):** recomputing the six octic and six nonic 62-bit primes with the same engine and primes reproduces the archived lifted coefficients exactly. Wall time is about 90 minutes (octic) and 30 minutes (nonic).
+
+**Outcome:**
+- Octic: 6 primes in 880–911 s each (log `data/octic/d8_L1194_p6.rerun.log`).
+- Nonic: 6 primes in 268–301 s each (log `data/nonic/d9_L690_p6.rerun.log`).
+- Lifted coefficients: identical to the earlier archived lists for both d = 8 and d = 9. The raw per-prime arrays are now archived.
+- `certify_ternary.py` re-lifts the arrays, checks every congruence, and reproduces `d8_rational.json` and `d9_rational.json` exactly.
+- Five negative controls (`scripts/negative_controls.py`) are all rejected.

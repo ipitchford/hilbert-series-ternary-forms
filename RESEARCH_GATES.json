@@ -75,6 +75,20 @@
    ],
    "closestPriorWork": "Derksen 2005 Section 6 treats binary forms; no ternary computation found",
    "verdict": "new-in-bounded-search"
+  },
+  {
+   "claim": "Structural consequences: exact minimal-generator counts in low degree; divisibility and degree-sum constraints on every hsop; leading constants",
+   "unit": "statement",
+   "paperLocation": "Section 6",
+   "searches": [
+    {
+     "date": "2026-09-26",
+     "query": "ternary octic/nonic invariants generators low degree; ternary septic invariants system of parameters degrees",
+     "corpus": "web, arXiv"
+    }
+   ],
+   "closestPriorWork": "none found for d = 7, 8, 9 (the method of deriving generator counts from Hilbert series is standard)",
+   "verdict": "new-in-bounded-search"
   }
  ],
  "sourcesReadInFull": [
@@ -128,11 +142,11 @@
   {
    "limitation": "d = 10 and beyond",
    "closingQuestion": "Is d = 10 cheap with the torus bound?",
-   "triedOrSearched": "bound degree 6564; exact a_n to 3249 needed",
+   "triedOrSearched": "bound degree 6564; exact a_n to 3249 needed; S^10 C^3 has 66 weights, above the engines' 64-weight limit",
    "estimatedCost": "about 100 CPU-hours",
    "cheap": false,
    "decision": "OPEN",
-   "reasonOpen": "cost exceeds the cheap threshold; sharper bounds (larger centralisers) could reduce it",
+   "reasonOpen": "about 100 CPU-hours, plus an engine change and renewed checking; sharper bounds (larger centralisers) could reduce it",
    "whyNotClosedNow": ""
   },
   {
@@ -170,6 +184,26 @@
    "closingQuestion": "Can an independent method check them cheaply?",
    "triedOrSearched": "independent weight counting (methodAd) modulo two 16-bit primes to degrees 450/400; out-of-sample prediction mod a 31-bit prime to 1600/1000",
    "estimatedCost": "minutes",
+   "cheap": true,
+   "decision": "CLOSED",
+   "reasonOpen": "",
+   "whyNotClosedNow": ""
+  },
+  {
+   "limitation": "External review 4.2: primary octic/nonic residue arrays not archived",
+   "closingQuestion": "Recompute the same primes with raw arrays saved?",
+   "triedOrSearched": "driver.py now saves residues; the same six primes rerun for d = 8, 9",
+   "estimatedCost": "about 2 h laptop",
+   "cheap": true,
+   "decision": "CLOSED",
+   "reasonOpen": "",
+   "whyNotClosedNow": ""
+  },
+  {
+   "limitation": "External review 4.5: mathematical value of the series not concrete",
+   "closingQuestion": "Which consequences follow from the series alone?",
+   "triedOrSearched": "generator counts; hsop constraints by MILP; leading constants",
+   "estimatedCost": "about 30 min",
    "cheap": true,
    "decision": "CLOSED",
    "reasonOpen": "",

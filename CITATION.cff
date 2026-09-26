@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "Unrefereed candidate. If you use this work, please cite it as below."
+title: "The Hilbert series of the invariants of ternary septics, octics and nonics"
+authors:
+  - name: "Anonymous"
+version: "0.2.0-candidate"
+date-released: "2026-09-26"
+doi: "10.5281/zenodo.22978726"
+license:
+  - CC0-1.0
+  - MIT
+repository-code: "https://github.com/ipitchford/hilbert-series-ternary-forms"
+url: "https://evidencepress.org/releases/hilbert-series-ternary-septic-octic-nonic/"
+type: software
+preferred-citation:
+  type: report
+  title: "The Hilbert series of the invariants of ternary septics, octics and nonics"
+  authors:
+    - name: "Anonymous"
+  publisher:
+    name: "Evidence Press"
+  year: 2026
+  doi: "10.5281/zenodo.22978726"
+  notes: "Unrefereed candidate, version 0.2.0-candidate."
+keywords: [invariant theory, Hilbert series, ternary forms, plane curves, universal denominator, computer-assisted proof]

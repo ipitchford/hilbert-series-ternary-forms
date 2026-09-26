@@ -1,0 +1,214 @@
+{
+ "7": {
+  "generators_low_degree": [
+   {
+    "degree": 6,
+    "a_n": 3,
+    "decomposable_monomials_upper": 0,
+    "g_n_lower": 3,
+    "g_n_upper": 3
+   },
+   {
+    "degree": 9,
+    "a_n": 13,
+    "decomposable_monomials_upper": 0,
+    "g_n_lower": 13,
+    "g_n_upper": 13
+   },
+   {
+    "degree": 12,
+    "a_n": 421,
+    "decomposable_monomials_upper": 6,
+    "g_n_lower": 415,
+    "g_n_upper": 420
+   }
+  ],
+  "hsop_min_sum": 1428,
+  "hsop_min_sum_degrees": {
+   "18": 1,
+   "21": 1,
+   "24": 2,
+   "27": 1,
+   "30": 2,
+   "33": 1,
+   "36": 2,
+   "39": 1,
+   "42": 1,
+   "45": 2,
+   "48": 1,
+   "51": 1,
+   "54": 1,
+   "57": 1,
+   "60": 1,
+   "63": 1,
+   "66": 1,
+   "69": 1,
+   "72": 1,
+   "75": 1,
+   "78": 1,
+   "87": 1,
+   "90": 1,
+   "108": 1
+  },
+  "milp_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "hsop_max_degree_lower_bound": 108,
+  "leading_constant": "6941174994070448673394177896178733/21015184838124191396352862244258709504000000",
+  "secondaries_for_min_sum_hsop_if_free": "11452938740216240311100393528694909450"
+ },
+ "8": {
+  "generators_low_degree": [
+   {
+    "degree": 3,
+    "a_n": 1,
+    "decomposable_monomials_upper": 0,
+    "g_n_lower": 1,
+    "g_n_upper": 1
+   },
+   {
+    "degree": 6,
+    "a_n": 6,
+    "decomposable_monomials_upper": 1,
+    "g_n_lower": 5,
+    "g_n_upper": 5
+   },
+   {
+    "degree": 9,
+    "a_n": 81,
+    "decomposable_monomials_upper": 6,
+    "g_n_lower": 75,
+    "g_n_upper": 80
+   }
+  ],
+  "hsop_min_sum": 2391,
+  "hsop_min_sum_degrees": {
+   "9": 1,
+   "24": 2,
+   "27": 1,
+   "30": 2,
+   "33": 1,
+   "36": 1,
+   "39": 1,
+   "42": 1,
+   "45": 3,
+   "48": 1,
+   "51": 2,
+   "54": 1,
+   "57": 1,
+   "60": 1,
+   "63": 2,
+   "66": 1,
+   "69": 1,
+   "72": 1,
+   "75": 1,
+   "78": 1,
+   "81": 1,
+   "84": 1,
+   "87": 1,
+   "90": 1,
+   "93": 1,
+   "105": 1,
+   "108": 1,
+   "111": 1,
+   "123": 1,
+   "126": 1,
+   "147": 1
+  },
+  "milp_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "hsop_max_degree_lower_bound": 147,
+  "leading_constant": "3232853333335344707932037345575591835725729749719611/77376420101666137834605303217743782952561353512648704000000000",
+  "secondaries_for_min_sum_hsop_if_free": "2327654400001448189711066888814426121722525419798119920"
+ },
+ "9": {
+  "generators_low_degree": [
+   {
+    "degree": 4,
+    "a_n": 1,
+    "decomposable_monomials_upper": 0,
+    "g_n_lower": 1,
+    "g_n_upper": 1
+   },
+   {
+    "degree": 6,
+    "a_n": 6,
+    "decomposable_monomials_upper": 0,
+    "g_n_lower": 6,
+    "g_n_upper": 6
+   },
+   {
+    "degree": 7,
+    "a_n": 3,
+    "decomposable_monomials_upper": 0,
+    "g_n_lower": 3,
+    "g_n_upper": 3
+   },
+   {
+    "degree": 8,
+    "a_n": 46,
+    "decomposable_monomials_upper": 1,
+    "g_n_lower": 45,
+    "g_n_upper": 45
+   },
+   {
+    "degree": 9,
+    "a_n": 118,
+    "decomposable_monomials_upper": 0,
+    "g_n_lower": 118,
+    "g_n_upper": 118
+   },
+   {
+    "degree": 10,
+    "a_n": 612,
+    "decomposable_monomials_upper": 6,
+    "g_n_lower": 606,
+    "g_n_upper": 611
+   }
+  ],
+  "hsop_min_sum": 1457,
+  "hsop_min_sum_degrees": {
+   "9": 1,
+   "12": 1,
+   "13": 2,
+   "14": 2,
+   "15": 2,
+   "16": 1,
+   "17": 1,
+   "18": 1,
+   "19": 1,
+   "20": 2,
+   "21": 2,
+   "23": 1,
+   "24": 2,
+   "25": 1,
+   "26": 1,
+   "27": 1,
+   "28": 1,
+   "29": 1,
+   "30": 2,
+   "31": 1,
+   "32": 1,
+   "34": 1,
+   "35": 1,
+   "36": 1,
+   "37": 1,
+   "38": 1,
+   "40": 1,
+   "41": 1,
+   "42": 1,
+   "43": 1,
+   "44": 1,
+   "46": 1,
+   "47": 1,
+   "48": 1,
+   "49": 1,
+   "50": 1,
+   "55": 1,
+   "56": 1,
+   "64": 1,
+   "66": 1
+  },
+  "milp_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "hsop_max_degree_lower_bound": 64,
+  "leading_constant": "33982265038660433031391145799504210481719724288616391713/1651577424771829498610721025260244417246204051259916288000000000000",
+  "secondaries_for_min_sum_hsop_if_free": "1189379276353115156098690102982647366860190350101573709955"
+ }
+}

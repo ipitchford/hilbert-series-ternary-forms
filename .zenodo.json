@@ -1,0 +1,58 @@
+{
+  "title": "The Hilbert series of the invariants of ternary septics, octics and nonics",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "creators": [
+    {
+      "name": "Anonymous"
+    }
+  ],
+  "version": "0.2.0-candidate",
+  "license": "cc-zero",
+  "access_right": "open",
+  "publication_date": "2026-09-26",
+  "keywords": [
+    "invariant theory",
+    "Hilbert series",
+    "Poincaré series",
+    "ternary forms",
+    "plane septics",
+    "plane octics",
+    "plane nonics",
+    "universal denominator",
+    "computer-assisted proof"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/ipitchford/hilbert-series-ternary-forms",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://evidencepress.org/releases/hilbert-series-ternary-septic-octic-nonic/",
+      "relation": "isDocumentedBy",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.22974308",
+      "relation": "continues",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1016/j.jalgebra.2004.10.029",
+      "relation": "references",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1016/j.jalgebra.2016.01.032",
+      "relation": "references",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1080/03081087.2010.536763",
+      "relation": "references",
+      "scheme": "doi"
+    }
+  ],
+  "description": "Unrefereed candidate. Determines the Hilbert series of the rings of SL3(C)-invariants of ternary forms of degrees 7, 8 and 9 (plane septics, octics and nonics); within the literature found, the largest degree previously completed was 6 (Bedratyuk-Xin 2011). The septic series equals the candidate of version 0.1.0 (doi:10.5281/zenodo.22974308), where it was proved only through degree 760; the octic and nonic series have least denominators of degrees 2331 and 1393. The method is known: Derksen's universal denominators (J. Algebra 2005) bound the poles by torus data, the functional equation (Knop; Stanley) fixes the numerator degree, and finitely many exact coefficients determine the series, as in Makam (J. Algebra 2016). Contributions: exhaustive torus-bound computations reproduced by a separately written program; correctness statements for two coefficient engines; exact coefficients with archived per-prime residues; certificates validated by re-deriving the known d = 5, 6 series; structural consequences (minimal generator counts in low degree; constraints on every system of parameters). Also records two attribution corrections to version 0.1.0. Provenance: AI-produced (Claude, Anthropic) under the direction of the publisher, Evidence Press; no human mathematical contribution is claimed and no human specialist has checked the work. Internal replay and model-based reviews only; no formal verification or specialist review; novelty within a bounded literature search."
+}

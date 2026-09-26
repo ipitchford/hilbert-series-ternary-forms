@@ -1,4 +1,8 @@
-"""Determine and certify H_d(t), the Hilbert series of C[S^d C^3]^SL3. Usage: certify_ternary.py d grid.json
+"""Determine and certify H_d(t), the Hilbert series of C[S^d C^3]^SL3.
+Usage: certify_ternary.py d grid.json [--reference rational.json] [--write out.json]
+The grid file must contain the raw per-prime residue arrays ('residues'); the script CRT-lifts them itself, checks every
+congruence, array length, prime, M and the coefficient bound, and (with --reference) compares the determined rational
+function with an immutable reference file. Nothing is written unless --write is given, and only after all checks pass.
 Inputs: torus bounds b_r (pole_bounds.py d; Derksen Thm 3.4 + 5.1); exact a_n for n <= floor(K/2) from grid residues
 modulo several primes (CRT); functional equation H(1/t) = (-1)^delta t^dimV H(t), delta = dimV - 8.
 Steps: B = prod Phi_r^{min(delta,b_r)}; P_n = sum_j B_j a_{n-j} for n <= K/2; P_{K-n} = eps P_n; H = P/B in lowest terms.
@@ -10,7 +14,12 @@ from sympy import isprime
 from flint import fmpz_poly
 here = os.path.dirname(os.path.abspath(__file__))
 PB = os.path.join(here, 'pole_bounds.py')
-d = int(sys.argv[1]); gridfile = sys.argv[2]
+args = sys.argv[1:]
+def opt(name):
+    if name in args: i = args.index(name); v = args[i + 1]; del args[i:i + 2]; return v
+    return None
+reference = opt('--reference'); writeto = opt('--write')
+d = int(args[0]); gridfile = args[1]
 subprocess.run([sys.executable, PB, str(d)], cwd=here, check=True, capture_output=True)
 b = {int(k): v[0] for k, v in json.load(open(os.path.join(here, f'pole_bounds_d{d}.json'))).items()}
 dimV = (d + 1) * (d + 2) // 2; delta = dimV - 8
@@ -22,11 +31,17 @@ if B[0] < 0: B = -B
 K = B.degree() - dimV; half = K // 2
 sB = 1 if int(B[B.degree()]) == int(B[0]) else -1
 eps = (-1) ** delta * sB
-gridfile = os.path.abspath(gridfile); outdir = os.path.dirname(gridfile)
 g = json.load(open(gridfile))
 primes, M, L = g['primes'], g['M'], g['L']
-meta = len(set(primes)) == len(primes) and all(isprime(q) and (q - 1) % M == 0 for q in primes) and M > d * L + 4 and L >= half
-a = [int(x) for x in g['coeffs']]
+meta = (int(g['d']) == d and len(set(primes)) == len(primes) and all(isprime(q) and (q - 1) % M == 0 for q in primes)
+        and M > d * L + 4 and L >= half and 'residues' in g and len(g['residues']) == len(primes)
+        and all(len(r) == L + 1 for r in g['residues']))
+if not meta: sys.exit(f"grid file metadata invalid (degree label, primes, M, residue arrays): {gridfile}")
+from sympy.ntheory.modular import crt
+res = [[int(x) for x in r] for r in g['residues']]
+a = [int(crt(primes, [r[n] for r in res])[0]) for n in range(L + 1)]
+congruent = all(a[n] % q == res[k][n] % q for k, q in enumerate(primes) for n in range(L + 1))
+matches_stored = 'coeffs' not in g or [int(x) for x in g['coeffs']] == a
 mod = prod(primes)
 bounds_ok = all(0 <= a[n] <= comb(n + dimV - 1, dimV - 1) for n in range(half + 1)) and mod > 2 * comb(half + dimV - 1, dimV - 1)
 Bl = [int(B[i]) for i in range(B.degree() + 1)]
@@ -57,13 +72,19 @@ for r in sorted(p):
     c = 0
     while Dr.degree() > 0 and (Dr % fmpz_poly.cyclotomic(r)) == 0: Dr = Dr // fmpz_poly.cyclotomic(r); c += 1
     if c: cyc[r] = c
-json.dump({"d": d, "D": [int(D[i]) for i in range(D.degree() + 1)], "N": [str(int(N[i])) for i in range(N.degree() + 1)],
-           "cyclotomic": {str(r): c for r, c in cyc.items()}, "bound_degree": B.degree(), "K": K, "eps": eps},
-          open(os.path.join(outdir, f'd{d}_rational.json'), 'w'))
+result = {"d": d, "D": [int(D[i]) for i in range(D.degree() + 1)], "N": [str(int(N[i])) for i in range(N.degree() + 1)],
+          "cyclotomic": {str(r): c for r, c in cyc.items()}, "bound_degree": B.degree(), "K": K, "eps": eps}
+ref_ok = True
+if reference:
+    ref = json.load(open(reference))
+    ref_ok = ref['D'] == result['D'] and ref['N'] == result['N'] and int(ref['d']) == d
 print(f"B: {len(p)} orders, deg {B.degree()}; K = {K}; eps = {eps:+d}; coefficients used 0..{half} (have {L})")
 print(f"grid metadata valid: {meta}; lifted a_n in range and modulus {mod.bit_length()} bits > 2*C(K/2+dimV-1,dimV-1): {bounds_ok}")
 print(f"least denominator degree {D.degree()}, numerator degree {N.degree()}; pole order at 1 = {m1} (Krull dim {delta})")
 print(f"series of N/D reproduces a_0..a_{half}: {reproduces}; coefficients nonnegative to t^{L}: {nonneg}")
 print("cyclotomic multiplicities:", cyc)
-ok = meta and bounds_ok and reproduces and m1 == delta and nonneg
+print(f"re-lifted a_n from {len(primes)} raw residue arrays: every congruence holds {congruent}; equals the stored lifted list {matches_stored}")
+if reference: print(f"determined rational function equals the reference {os.path.basename(reference)}: {ref_ok}")
+ok = meta and bounds_ok and reproduces and m1 == delta and nonneg and congruent and matches_stored and ref_ok
+if ok and writeto: json.dump(result, open(writeto, 'w'))
 print(f"d = {d} DETERMINATION PASSES:", ok); sys.exit(0 if ok else 1)

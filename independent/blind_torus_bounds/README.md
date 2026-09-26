@@ -1,4 +1,6 @@
-# b_r(d) for S^d(C^3) under the diagonal torus of SL3 (d = 5, 6, 7)
+# b_r(d) for S^d(C^3) under the diagonal torus of SL3 (written for d = 5, 6, 7; also run for d = 8, 9)
+
+*Producer note (not part of the blind agent's text): the program accepts any d as an argument. The same unmodified code produced `results_d8.json` and `results_d9.json`, and replay mode `fresh` reruns it for d = 5..9 in a temporary copy.*
 
 Files: `poles.py` (main exact computation), `sanity.py` (hand examples), `crosscheck.py`
 (independent brute force over torsion t), `results_d{5,6,7}.json` (r -> b_r, only b_r > 0 listed).

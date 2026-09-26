@@ -1,7 +1,7 @@
 # Agent-readable research index
 
 - **Title:** The Hilbert series of the invariants of ternary septics, octics and nonics.
-- **Version:** 0.2.0-candidate (unrefereed candidate). It follows [v0.1.0](https://doi.org/10.5281/zenodo.22974308).
+- **Version:** 0.2.0-candidate (unrefereed candidate). DOI [10.5281/zenodo.22978726](https://doi.org/10.5281/zenodo.22978726). It follows [v0.1.0](https://doi.org/10.5281/zenodo.22974308).
 - **Creator:** Anonymous. **Publisher:** Evidence Press.
 - **Files:** [paper](paper/paper.pdf), [claims](CLAIMS.json), [prior art](PRIOR_ART.md), [research gates](RESEARCH_GATES.json), [README](README.md).
 
@@ -16,12 +16,12 @@
 - priority beyond the bounded search in [PRIOR_ART.md](PRIOR_ART.md).
 
 **Evidence.**
-- [scripts/certify_septic_unconditional.py](scripts/certify_septic_unconditional.py) and [scripts/certify_ternary.py](scripts/certify_ternary.py) are the exact certificates.
+- [scripts/certify_septic_unconditional.py](scripts/certify_septic_unconditional.py) and [scripts/certify_ternary.py](scripts/certify_ternary.py) are the exact certificates; [scripts/negative_controls.py](scripts/negative_controls.py) checks that corrupted inputs are rejected.
 - [scripts/check_ternary_extra.py](scripts/check_ternary_extra.py) runs the out-of-sample and independent checks.
 - [scripts/check_validation.py](scripts/check_validation.py) validates the method on the known d = 5, 6 cases.
 - [independent/blind_torus_bounds/](independent/blind_torus_bounds/README.md) is the blind program for the torus bounds.
 
-**Replay.** Run `PY=python3 ./replay.sh` (about 3 min); see [README.md](README.md).
+**Replay.** Run `PY=python3 ./replay.sh [archived|fresh|full]`. The modes are labelled by verification level, and each writes a JSON receipt; see [README.md](README.md). The coefficient engines are justified in paper §3 (Propositions 5 and 6, with a code map).
 
 **Trust boundaries.**
 - The trusted base is the C grid engines, the weight-counting code, Python, python-flint and sympy.

@@ -36,6 +36,7 @@ The machine-readable contribution map, limitation triage and extension scout are
 | H for ternary octics (d = 8) | none found | new in the bounded search |
 | H for ternary nonics (d = 9) | none found | new in the bounded search |
 | H for d ≤ 6 | classical (d ≤ 4); Bedratyuk–Xin 2011 (d = 5, 6) | known; re-derived here as validation |
+| History and methods up to 1991 | B. Broer, *Hilbert series for ternary forms*, CWI Tract 84 (1991) 1–18. It covers cubic concomitants, some quartic covariants and systems of forms, not d = 7, 8, 9 (confirmed by the external reviewer, 26 Sep 2026) | context; cited |
 
 ## Corrections to v0.1.0 (recorded here and in the paper, §1)
 

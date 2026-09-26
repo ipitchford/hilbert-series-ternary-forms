@@ -1,6 +1,6 @@
 # The Hilbert series of the invariants of ternary septics, octics and nonics
 
-This is an **unrefereed candidate**, version 0.2.0-candidate, dated 26 September 2026. The creator is Anonymous and the publisher is Evidence Press. It follows version 0.1.0-candidate (doi:10.5281/zenodo.22974308), which is immutable. This bundle is prepared for external review and is **not yet published**.
+This is an **unrefereed candidate**, version 0.2.0-candidate, dated 26 September 2026. The creator is Anonymous and the publisher is Evidence Press. It follows version 0.1.0-candidate (doi:10.5281/zenodo.22974308), which is immutable. DOI: [10.5281/zenodo.22978726](https://doi.org/10.5281/zenodo.22978726). Repository: https://github.com/ipitchford/hilbert-series-ternary-forms.
 
 The paper is [paper/paper.pdf](paper/paper.pdf), with source [paper/paper.tex](paper/paper.tex).
 
@@ -40,17 +40,17 @@ The contributions are:
 | Research gates | `RESEARCH_GATES.json`: contribution-unit prior art, limitation triage, extension scout | passed |
 
 ## Replay
-```bash
-PY=/path/to/python ./replay.sh          # about 3 min: all certificates, checks and validation, plus a fresh spot recomputation
-FULL=1 PY=/path/to/python ./replay.sh   # also regenerates the exact septic integers to t^760 (4.8 GB RAM)
-```
-Requirements: `requirements.txt` (python-flint, sympy) and a C compiler with OpenMP. The replay verifies `MANIFEST.sha256` before and after it runs.
+The single entry point is `PY=/path/to/python ./replay.sh [mode]`. The modes are cumulative:
 
-To recompute the octic and nonic grid residues from scratch (all but the first two take several minutes to hours):
-- `scripts/driver.py 8 1194 6 out.json` (about 90 min);
-- `scripts/driver.py 9 690 6 out.json` (about 30 min);
-- `scripts/run32.py 8 1600 1 out.json` and `scripts/run32.py 9 1000 1 out.json` (the out-of-sample primes);
-- `scripts/methodAd 8 450 p` and `scripts/methodAd 9 400 p` for p = 65521, 65519.
+| Mode | What it does | Time |
+|---|---|---|
+| `archived` (default) | Freshly runs our torus enumerator and every certificate. Re-lifts every archived residue array: the 15 septic weight-counting arrays and the six octic and six nonic grid arrays. Compares with the archived output of the blind torus program. Recomputes and compares the consequences. Checks the research gates and the manifest before and after. No coefficient is regenerated | about 1 min |
+| `fresh` | Adds bounded fresh recomputation: the blind torus program is rerun for d = 5–9; the d = 5, 6 validation grids are regenerated and byte-compared; the septic weight counting is regenerated to degree 120; one fresh 62-bit grid prime is run for d = 8 to degree 200; weight counting mod 65497 is run for d = 8, 9 to degree 60 | about 3 min |
+| `full` | Adds full regeneration of every archived coefficient file, byte-compared with the archive: septics to 760; the six octic primes to 1194; the six nonic primes to 690; the 31-bit out-of-sample primes; the weight-counting runs | about 2.5 h |
+
+Each run writes `receipts/replay_<mode>_<time>.json`. The receipt records every command, its input and output hashes, the range computed and the result. The producer's receipts are shipped as `REPLAY_RECEIPT_archived.json`, `REPLAY_RECEIPT_fresh.json` and `REPLAY_RECEIPT_full.json`.
+
+Requirements: `requirements.txt` (python-flint, sympy, numpy, scipy) and a C compiler with OpenMP.
 
 ## Status and limitations
 - The theorems are computer-assisted. No step is formally verified.
@@ -64,11 +64,12 @@ To recompute the octic and nonic grid residues from scratch (all but the first t
 | Path | Content |
 |---|---|
 | `paper/` | paper.tex, paper.pdf, octic_macros.tex |
-| `scripts/` | Enumeration (`pole_bounds.py`), certificates, checks, grid engines (`mw5.c`, `mw6.c`, drivers), weight counting (`methodAd.c`), gate checker |
+| `scripts/` | Enumeration (`pole_bounds.py`), certificates (`certify_septic_unconditional.py`, `certify_ternary.py`), checks, negative controls (`negative_controls.py`), `consequences.py`, grid engines (`mw5.c`, `mw6.c`, `driver.py`, `run32.py`), weight counting (`methodAd.c`), `replay.py`, gate checker |
 | `data/septic/` | Candidate R₇, exact a_n to 760, per-prime weight-counting outputs, regeneration driver |
-| `data/octic/`, `data/nonic/` | Exact grid residues, determined rational functions, out-of-sample and weight-counting residues, run logs |
+| `data/octic/`, `data/nonic/` | Raw per-prime grid residue arrays with the CRT lifts; determined rational functions; out-of-sample and weight-counting residues; run logs |
+| `data/consequences.json` | Generator counts, hsop constraints and leading constants (paper §6) |
 | `data/validation/` | Fresh d = 5, 6 grid data and Bedratyuk–Xin numerators |
 | `independent/blind_torus_bounds/` | The blind program, its README, sanity and cross-checks, and results for d = 5–9 |
-| `review/` | GPT-5.6 reviews (two rounds) and the proof note they reviewed |
+| `review/` | GPT-5.6 reviews (two rounds) and the proof note they reviewed; the response to the external review of v0.2.0; the editorial-gate records |
 | `PRIOR_ART.md`, `RESEARCH_GATES.json`, `PRE-REGISTERED.md` | Prior art; research gates; forecasts and outcomes |
-| `LICENSES.md`, `ENVIRONMENT.txt`, `MANIFEST.sha256`, `REPLAY_RECEIPT.md` | Licences, environment, hashes, replay receipt |
+| `LICENSES.md`, `ENVIRONMENT.txt`, `MANIFEST.sha256`, `REPLAY_RECEIPT_*.json` | Licences, environment, hashes, producer replay receipts (one per mode) |

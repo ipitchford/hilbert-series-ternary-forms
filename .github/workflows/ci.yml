@@ -1,0 +1,21 @@
+name: replay
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  archived-and-fresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install -r requirements.txt
+      - name: archived mode (certificates on the stored data)
+        run: PY=python ./replay.sh archived
+      - name: fresh mode (adds bounded recomputation)
+        run: PY=python ./replay.sh fresh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: replay-receipts
+          path: receipts/

@@ -24,6 +24,8 @@ for n in range(L + 1):
 modulus = 1
 for p in primes: modulus *= p
 if out:
-    json.dump({"d": d, "L": L, "M": M, "primes": primes, "coeffs": [str(c) for c in coef]}, open(out, 'w'))
+    json.dump({"d": d, "L": L, "M": M, "primes": primes,
+               "residues": [[str(x) for x in r] for r in res],          # raw engine output, one array per prime
+               "coeffs": [str(c) for c in coef]}, open(out, 'w'))
 print("max coefficient bits:", max(c.bit_length() for c in coef), "modulus bits:", modulus.bit_length(), file=sys.stderr)
 print(coef[:40])
