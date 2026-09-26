@@ -85,7 +85,7 @@ for d, g, ref, extra in [(8, 'data/octic/d8_L1194_p6.json', 'data/octic/d8_ratio
          [PY, 'certify_ternary.py', str(d), '../' + g, '--predict', '../' + extra[0], '--reference', '../' + ref], cwd='scripts', inputs=[g, extra[0], ref], expect='PASSES: True')
     step(f'H_{d}: out-of-sample prediction and weight-counting agreement (archived residues)', 'archived',
          [PY, 'check_ternary_extra.py', str(d), '../' + ref] + ['../' + e for e in extra], cwd='scripts', inputs=[ref] + extra, expect='PASS: True')
-step('negative controls: corrupted residues, wrong degree label, truncated array and tampered reference are all rejected', 'archived',
+step('negative controls: corrupted residues, wrong degree label, truncated array, tampered reference and two undersized denominators are all rejected; unmodified inputs accepted', 'archived',
      [PY, 'negative_controls.py'], cwd='scripts', inputs=['data/octic/d8_L1194_p6.json', 'data/nonic/d9_L690_p6.json'], expect='REJECTED: True')
 for d, N, folder in [(8, 1194, 'octic'), (9, 690, 'nonic')]:
     step(f'second algorithm, d = {d}: re-lift the archived weight-counting arrays (n <= {N}) and require equality with the grid coefficients', 'archived',
